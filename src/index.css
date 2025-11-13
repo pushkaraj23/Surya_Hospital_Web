@@ -5,3 +5,14 @@
 * {
     font-family: 'Montserrat', sans-serif;
 }
+
+
+
+/* Hide scrollbar for a clean look */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
