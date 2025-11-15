@@ -28,7 +28,7 @@ export default function Departments() {
             </div>
 
             {/* Department Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-10 gap-4">
                 {departments.map((dept) => (
                     <div
                         key={dept.id}
@@ -36,7 +36,7 @@ export default function Departments() {
               ${dept.color}
               ${dept.id === 2 ? "col-span-5" : ""}
               rounded-2xl flex flex-col items-center justify-center text-center 
-              shadow-[4px_0_20px_-10px_rgba(0,0,0,0.15)] relative h-[420px]
+              shadow-[4px_0_20px_-10px_rgba(0,0,0,0.15)] relative h-[500px]
             `}
                     >
                         {/* Number Badge */}
@@ -50,7 +50,7 @@ export default function Departments() {
                                 <img
                                     src={dept.image}
                                     alt={dept.name}
-                                    className="h-3/4 w-full object-cover"
+                                    className="h-3/5 w-full object-cover"
                                 />
 
                                 <div className="h-1/4 p-4 text-left flex flex-col justify-between">
