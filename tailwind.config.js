@@ -8,6 +8,10 @@ export default {
         secondary: "#F59422", // Orange
         accent: "#EFB626", // Yellow
         mute: "#F9FAFB", // White Bg
+        fadedyellow: "#EFB626",
+        fadedorange: "#F59422",
+        fadedblue: "#0D47A1", 
+        fadedviolet: "#003B76"
       },
       fontFamily: {
         montserrat: ["Montserrat", "sans-serif"],
