@@ -550,13 +550,13 @@ const ArticleDetail = ({ article, onBack, relatedArticles }) => {
           <div className="bg-gradient-to-r from-blue-500 to-blue-500 rounded-2xl p-8 text-white">
             <h2 className="text-2xl font-bold mb-4">Stay Updated with Health Insights</h2>
             <p className="mb-6 opacity-90">Subscribe to our newsletter for the latest health tips and medical insights.</p>
-            <div className="flex max-w-md mx-auto">
+            <div className="flex max-w-md  max-sm:flex-col max-sm:gap-2 mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-4 py-3 rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
+                className="flex-1 px-4 py-3 rounded-l-lg max-sm:rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
               />
-              <button className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-r-lg hover:bg-gray-100 transition-colors">
+              <button className="px-6 py-3 bg-white  max-sm:rounded-lg text-blue-600 font-semibold rounded-r-lg hover:bg-gray-100 transition-colors">
                 Subscribe
               </button>
             </div>

@@ -613,11 +613,10 @@ function DepartmentDetail({ department, onBack, onDoctorSelect }) {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-6 py-3 font-semibold border-b-2 transition-colors ${
-                    activeTab === tab
-                      ? "border-blue-600 text-blue-600"
+                  className={`px-6 py-3 max-sm:px-1.5 max-sm:py-2 max-sm:text-sm rounded-lg font-semibold transition-colors ${activeTab === tab
+                      ? " text-blue-600"
                       : "border-transparent text-gray-500 hover:text-gray-700"
-                  }`}
+                    }`}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
                 </button>

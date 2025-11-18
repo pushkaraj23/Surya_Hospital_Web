@@ -49,7 +49,7 @@ export default function ExpertsSection() {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-5 max-sm:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-5 max-sm:grid-cols-1">
         {experts.map((expert, idx) => (
           <div
             key={idx}

@@ -1,4 +1,5 @@
 import React from "react";
+import JourneyTimeline from "./JourneyTimeline";
 
 export default function AboutSections() {
   // CMS Data - This would come from your content management system
@@ -14,7 +15,7 @@ What sets us apart is our unwavering dedication to medical excellence combined w
 I'm proud of the milestones we've achieved together and excited for the innovations we're bringing to our community. Thank you for trusting us with your health.`,
       signature: "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?w=200&auto=format&fit=crop&q=60"
     },
-    
+
     coreValues: [
       {
         icon: "💖",
@@ -85,14 +86,14 @@ I'm proud of the milestones we've achieved together and excited for the innovati
 
   return (
     <div className="w-full space-y-20 p-6 bg-white lg:p-12">
-      
+
       {/* Director's Message Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-gradient-to-br from-purple-50 to-blue-50 rounded-3xl p-8 lg:p-12 shadow-lg">
-        
+
         {/* Director Image */}
         <div className="lg:col-span-4 flex justify-center">
           <div className="relative">
-            <div className="w-80 h-80 rounded-2xl overflow-hidden shadow-2xl border-8 border-white">
+            <div className="w-80 h-80 rounded-2xl overflow-hidden shadow-2xl border-8 border-white ">
               <img
                 src={cmsData.director.image}
                 alt={cmsData.director.name}
@@ -126,8 +127,8 @@ I'm proud of the milestones we've achieved together and excited for the innovati
           <div className="flex items-center gap-4 pt-6">
             <div className="w-32 h-0.5 bg-purple-300"></div>
             <div className="flex items-center gap-3">
-              <img 
-                src={cmsData.director.signature} 
+              <img
+                src={cmsData.director.signature}
                 alt="Signature"
                 className="h-12 object-contain"
               />
@@ -145,11 +146,11 @@ I'm proud of the milestones we've achieved together and excited for the innovati
             The fundamental beliefs that guide our actions and define our culture of care
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {cmsData.coreValues.map((value, index) => (
             <div key={index} className="group bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 ">
                 <div className="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <span className="text-2xl">{value.icon}</span>
                 </div>
@@ -183,7 +184,7 @@ I'm proud of the milestones we've achieved together and excited for the innovati
 
       {/* Milestones Timeline */}
       <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-3xl p-8 lg:p-12 shadow-lg">
-        <div className="text-center mb-12">
+        {/* <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">Our Journey</h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
             Celebrating milestones that mark our commitment to healthcare excellence
@@ -191,30 +192,28 @@ I'm proud of the milestones we've achieved together and excited for the innovati
         </div>
 
         <div className="relative">
-          {/* Timeline line */}
+
           <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-orange-200 h-full hidden lg:block"></div>
-          
+
           <div className="space-y-12">
             {cmsData.milestones.map((milestone, index) => (
-              <div key={index} className={`flex flex-col lg:flex-row items-center gap-6 ${
-                index % 2 === 0 ? 'lg:flex-row-reverse' : ''
-              }`}>
-                {/* Year Circle */}
+              <div key={index} className={`flex flex-col lg:flex-row items-center gap-6 ${index % 2 === 0 ? 'lg:flex-row-reverse' : ''
+                }`}>
+
                 <div className="flex-shrink-0 w-24 h-24 rounded-full bg-orange-500 border-8 border-white shadow-xl flex items-center justify-center z-10">
                   <span className="text-white font-bold text-lg">{milestone.year}</span>
                 </div>
 
-                {/* Content */}
-                <div className={`flex-1 bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow ${
-                  index % 2 === 0 ? 'lg:text-right' : 'lg:text-left'
-                } text-center lg:text-left`}>
+                <div className={`flex-1 bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow ${index % 2 === 0 ? 'lg:text-right' : 'lg:text-left'
+                  } text-center lg:text-left`}>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">{milestone.event}</h3>
                   <p className="text-gray-600">{milestone.description}</p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
+        <JourneyTimeline/>
       </div>
 
       {/* Infrastructure Overview */}

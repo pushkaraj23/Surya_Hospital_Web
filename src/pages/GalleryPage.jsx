@@ -255,12 +255,12 @@ const GalleryPage = () => {
         
         {/* Category Filters */}
         <div className="mb-8">
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap justify-start gap-2">
             {categories.map(category => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                className={`px-6 py-3 max-sm:px-3 max-sm:py-1 max-sm:text-sm rounded-full font-medium transition-all duration-300 ${
                   selectedCategory === category.id
                     ? 'bg-blue-600 text-white shadow-lg'
                     : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 shadow'

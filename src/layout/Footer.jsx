@@ -25,7 +25,7 @@ export default function Footer() {
               Subscribe to our Newsletter
             </h2>
 
-            <div className="flex gap-3 w-full md:w-auto">
+            <div className="flex gap-3 max-sm:flex-col w-full md:w-auto">
               <input
                 type="email"
                 value={email}

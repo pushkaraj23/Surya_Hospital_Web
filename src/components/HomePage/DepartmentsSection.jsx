@@ -70,10 +70,9 @@ export default function Departments() {
                 rounded-2xl relative shadow-md transition-all duration-500 
                 cursor-pointer h-[62vh] max-sm:h-[50vh] flex-shrink-0
 
-                ${
-                  expanded
-                    ? "w-[500px] max-sm:w-[80vw]"
-                    : "w-[22vw] md:w-[15vw]"
+                ${expanded
+                  ? "w-[500px] max-sm:w-[80vw]"
+                  : "w-[22vw] md:w-[15vw]"
                 }
               `}
             >
