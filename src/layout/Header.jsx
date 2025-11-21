@@ -84,6 +84,7 @@ const Header = () => {
             <NavItem name="Doctors" path="/doctors" />
             <NavItem name="Gallery" path="/gallery" />
             <NavItem name="Blogs" path="/blogs" />
+            <NavItem name="Feedback" path="/feedback" />
           </ul>
 
           {/* Desktop Contact Button */}
@@ -132,16 +133,23 @@ const Header = () => {
             mobile
             onClick={closeMobileMenu}
           />
+          <NavItem
+            name="Feedback"
+            path="/feedback"
+            mobile
+            onClick={closeMobileMenu}
+          />
           <NavItem name="Blogs" path="/blogs" mobile onClick={closeMobileMenu} />
 
           {/* Mobile Contact Button */}
           <Link
-            to="/contact"
+            path="/contact"
             onClick={closeMobileMenu}
             className="bg-secondary text-white py-2.5 rounded-full text-center font-semibold hover:bg-accent transition"
           >
             Contact Us
           </Link>
+
         </ul>
       </div>
     </header>
@@ -154,9 +162,8 @@ const NavItem = ({ name, path, mobile, onClick }) => (
     <Link
       to={path}
       onClick={onClick}
-      className={`hover:text-primary transition ${
-        mobile ? "block w-full text-base" : ""
-      }`}
+      className={`hover:text-primary transition ${mobile ? "block w-full text-base" : ""
+        }`}
     >
       {name}
     </Link>
