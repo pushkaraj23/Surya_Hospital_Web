@@ -137,28 +137,6 @@ const BlogHighlights = () => {
         console.error("❌ Error loading blog highlights:", err);
         setError(err.message);
         // Fallback to sample data if API fails
-        setBlogs([
-          {
-            title: "Hello World",
-            subtitle: "This is a subtitle",
-            image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?w=600&auto=format&fit=crop&q=60",
-          },
-          {
-            title: "Hello World",
-            subtitle: "This is a subtitle",
-            image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?w=600&auto=format&fit=crop&q=60",
-          },
-          {
-            title: "Hello World",
-            subtitle: "This is a subtitle",
-            image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?w=600&auto=format&fit=crop&q=60",
-          },
-          {
-            title: "Hello World",
-            subtitle: "This is a subtitle",
-            image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?w=600&auto=format&fit=crop&q=60",
-          },
-        ]);
       } finally {
         setLoading(false);
       }
@@ -246,9 +224,7 @@ const BlogHighlights = () => {
               src={blog.image}
               alt={blog.title}
               className="w-full h-[365px] object-cover transform group-hover:scale-110 transition-all duration-500"
-              onError={(e) => {
-                e.target.src = "https://images.unsplash.com/photo-1550831107-1553da8c8464?w=600&auto=format&fit=crop&q=60";
-              }}
+            
             />
 
             {/* Overlay Gradient */}

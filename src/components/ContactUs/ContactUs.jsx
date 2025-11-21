@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createContact } from "../../api/userApi"; // Import your API function
 
 const ContactUs = () => {
     const [loading, setLoading] = useState(true);
@@ -75,10 +76,19 @@ const ContactUs = () => {
             setIsSubmitting(true);
             
             try {
-                // Simulate API call to submit contact form
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                // Prepare data for API - matching your exact body structure
+                const contactData = {
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    subject: formData.subject,
+                    message: formData.message
+                };
+
+                // Call the imported API function
+                const result = await createContact(contactData);
                 
-                console.log("Contact form submitted:", formData);
+                console.log("Contact form submitted successfully:", result);
                 alert("Thank you for your message! We'll get back to you soon.");
 
                 // Reset form
@@ -112,7 +122,23 @@ const ContactUs = () => {
     return (
         <div className="font-primary min-h-screen text-gray-800 relative overflow-hidden animate-fadeIn mt-20">
             {/* Emergency Banner */}
-            
+            <div className="bg-gradient-to-r from-red-500 to-red-700 py-3 px-6 shadow-lg">
+                <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
+                    <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 bg-gray-800 rounded-full animate-pulse"></div>
+                        <span className="font-bold text-lg">24×7 Emergency Helpline</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <span className="text-xl font-bold">+91 8888-6890-61</span>
+                    </div>
+                    <div className="text-sm opacity-90">
+                        Available round the clock for emergency services
+                    </div>
+                </div>
+            </div>
 
             <div className="relative z-10 space-y-8 max-w-7xl mx-auto px-4 py-8">
                 {/* Header */}
@@ -228,12 +254,6 @@ const ContactUs = () => {
                         <div className="bg-white/20 backdrop-blur-lg p-6 rounded-xl shadow-lg border ">
                             <h2 className="text-xl font-bold mb-4">Quick Connect</h2>
                             <div className="space-y-3">
-                                {/* <button className="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 text-left flex items-center gap-3">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                    </svg>
-                                    Call Now
-                                </button> */}
                                 <button className="w-full bg-gradient-to-r from-accent to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 text-left flex items-center gap-3">
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -422,23 +442,6 @@ const ContactUs = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div className="bg-gradient-to-r from-red-500 to-red-700 py-3 px-6 shadow-lg">
-                <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
-                    <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 bg-gray-800 rounded-full animate-pulse"></div>
-                        <span className="font-bold text-lg">24×7 Emergency Helpline</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                        <span className="text-xl font-bold">+91 8888-6890-61</span>
-                    </div>
-                    <div className="text-sm opacity-90">
-                        Available round the clock for emergency services
                     </div>
                 </div>
             </div>

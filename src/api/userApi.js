@@ -93,3 +93,24 @@ export const getAllFeedback = async () => {
     throw error;
   }
 };
+
+export const submitFeedback = async (data) => {
+  try {
+    const response = await axiosInstance.post("/feedback", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting feedback:", error);
+    throw error;
+  }
+};
+
+
+export const createContact = async (contactData) => {
+  try {
+    const response = await axiosInstance.post("/contact", contactData);
+    return response.data; // backend returns: { code, body, message }
+  } catch (error) {
+    console.error("Error creating contact:", error);
+    throw error;
+  }
+};
