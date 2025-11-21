@@ -457,7 +457,7 @@ const FeedbackForm = () => {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto my-20">
+    <div className="w-full max-w-2xl mx-auto pt-36 mb-12">
       {/* Header Banner */}
       <div className="bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl text-center mb-6">
         <h1 className="text-2xl font-bold text-white mb-2">

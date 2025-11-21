@@ -107,12 +107,13 @@ const Header = () => {
 
       {/* 🔻 Mobile Menu */}
       <div
+
         className={`md:hidden bg-white/75 backdrop-blur-md shadow-xl rounded-3xl mx-5 mt-2 py-7 px-6 
           transition-all duration-400 overflow-hidden
           ${mobileOpen ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"}
         `}
       >
-        <ul className="flex flex-col gap-5 text-gray-700 font-semibold">
+        <ul className="flex flex-col gap-5 text-gray-700 items-center font-semibold">
           <NavItem name="Home" path="/" mobile onClick={closeMobileMenu} />
           <NavItem name="About Us" path="/about" mobile onClick={closeMobileMenu} />
           <NavItem
@@ -145,7 +146,7 @@ const Header = () => {
           <Link
             path="/contact"
             onClick={closeMobileMenu}
-            className="bg-secondary text-white py-2.5 rounded-full text-center font-semibold hover:bg-accent transition"
+            className="bg-secondary text-white py-2.5 px-7 rounded-full text-center font-semibold hover:bg-accent transition"
           >
             Contact Us
           </Link>
