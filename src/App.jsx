@@ -11,6 +11,7 @@ import ScrollToTop from "./utils/ScrollToTop";
 import AppointmentBooking from "./components/Appoinment Booking/AppointmentBooking";
 import ContactUs from "./components/ContactUs/ContactUs";
 import FeedbackForm from "./components/Feedback Form/FeedbackForm";
+import DepartmentDetailPage from "./pages/DepartmentDetailPage";
 
 function App() {
   return (
@@ -21,13 +22,13 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/departments" element={<DepartmentsPage />} />
+        <Route path="/departments/:id" element={<DepartmentDetailPage />} />
         <Route path="/doctors" element={<DoctorsPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/blogs" element={<BlogPage />} />
         <Route path="/appoinmentBooking" element={<AppointmentBooking />} />
         <Route path="/contact" element={<ContactUs />} />
-        <Route path="/feedback" element={<FeedbackForm/>} />
-
+        <Route path="/feedback" element={<FeedbackForm />} />
       </Routes>
       <Footer />
     </div>
