@@ -317,8 +317,8 @@
 
 // export default FeedbackForm;
 
-
 import React, { useState } from "react";
+import { submitFeedback } from "../../api/userApi"; 
 
 const FeedbackForm = () => {
   const [formData, setFormData] = useState({
@@ -367,9 +367,7 @@ const FeedbackForm = () => {
       newErrors.mobilenumber = "Please enter a valid 10-digit mobile number";
     }
 
-    if (formData.rating === 0) {
-      newErrors.rating = "Please select a rating";
-    }
+    if (formData.rating === 0) newErrors.rating = "Please select a rating";
 
     if (!formData.feedback.trim()) {
       newErrors.feedback = "Feedback message is required";
@@ -387,38 +385,27 @@ const FeedbackForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          fullname: formData.fullname,
-          mobilenumber: formData.mobilenumber,
-          rating: formData.rating,
-          feedback: formData.feedback,
-          isapproved: false,
-        }),
+      await submitFeedback({
+        fullname: formData.fullname,
+        mobilenumber: formData.mobilenumber,
+        rating: formData.rating,
+        feedback: formData.feedback,
+        isapproved: false,
       });
 
-      if (response.ok) {
-        console.log("Feedback submitted successfully:", formData);
-        setIsSubmitted(true);
-        
-        setTimeout(() => {
-          setFormData({
-            fullname: "",
-            mobilenumber: "",
-            rating: 0,
-            feedback: "",
-          });
-          setIsSubmitted(false);
-        }, 3000);
-      } else {
-        throw new Error('Failed to submit feedback');
-      }
+      setIsSubmitted(true);
+
+      setTimeout(() => {
+        setFormData({
+          fullname: "",
+          mobilenumber: "",
+          rating: 0,
+          feedback: "",
+        });
+        setIsSubmitted(false);
+      }, 3000);
+
     } catch (error) {
-      console.error("Error submitting feedback:", error);
       setErrors({ submit: "Failed to submit feedback. Please try again." });
     } finally {
       setIsSubmitting(false);
@@ -428,7 +415,7 @@ const FeedbackForm = () => {
   const getRatingText = (rating) => {
     const ratings = {
       1: "Poor",
-      2: "Fair", 
+      2: "Fair",
       3: "Good",
       4: "Very Good",
       5: "Excellent"
@@ -458,7 +445,6 @@ const FeedbackForm = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto pt-36 mb-12">
-      {/* Header Banner */}
       <div className="bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl text-center mb-6">
         <h1 className="text-2xl font-bold text-white mb-2">
           Share Your Feedback
@@ -468,7 +454,6 @@ const FeedbackForm = () => {
         </p>
       </div>
 
-      {/* Form Container */}
       <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-200">
         <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
           <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -476,16 +461,15 @@ const FeedbackForm = () => {
           </svg>
           Tell Us About Your Experience
         </h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
-          
-          {/* Rating Section */}
+
+          {/* ⭐ Rating Section */}
           <div className="text-center">
             <label className="block text-sm font-semibold text-gray-700 mb-4">
               How would you rate your experience? *
             </label>
-            
-            {/* Star Rating */}
+
             <div className="flex justify-center space-x-1 mb-3">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -496,39 +480,41 @@ const FeedbackForm = () => {
                   onMouseLeave={() => setHoverRating(0)}
                   className="transform hover:scale-110 transition-transform duration-200"
                 >
-                  <svg 
+                  <svg
                     className={`w-8 h-8 ${
                       star <= (hoverRating || formData.rating)
-                        ? 'text-yellow-400 fill-current'
-                        : 'text-gray-300'
+                        ? "text-yellow-400 fill-current"
+                        : "text-gray-300"
                     }`}
-                    fill="currentColor"
                     viewBox="0 0 24 24"
+                    fill="currentColor"
                   >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                 </button>
               ))}
             </div>
-            
-            {/* Rating Text */}
+
             <div className={`text-lg font-semibold ${
-              formData.rating >= 4 ? 'text-green-600' :
-              formData.rating >= 3 ? 'text-yellow-600' : 
-              formData.rating > 0 ? 'text-red-600' : 'text-gray-500'
+              formData.rating >= 4
+                ? "text-green-600"
+                : formData.rating >= 3
+                ? "text-yellow-600"
+                : formData.rating > 0
+                ? "text-red-600"
+                : "text-gray-500"
             }`}>
               {formData.rating > 0 ? getRatingText(formData.rating) : "Select your rating"}
             </div>
-            
+
             {errors.rating && (
               <p className="text-red-500 text-sm mt-2">{errors.rating}</p>
             )}
           </div>
 
-          {/* Personal Information */}
+          {/* Name + Mobile */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
-            {/* Full Name */}
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -541,9 +527,9 @@ const FeedbackForm = () => {
                 name="fullname"
                 value={formData.fullname}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all ${
-                  errors.fullname ? 'border-red-400' : 'border-gray-300'
-                }`}
+                className={`w-full px-3 py-2 border rounded-lg ${
+                  errors.fullname ? "border-red-400" : "border-gray-300"
+                } focus:ring-2 focus:ring-accent focus:border-transparent`}
                 placeholder="Enter your full name"
               />
               {errors.fullname && (
@@ -551,7 +537,6 @@ const FeedbackForm = () => {
               )}
             </div>
 
-            {/* Mobile Number */}
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -564,9 +549,9 @@ const FeedbackForm = () => {
                 name="mobilenumber"
                 value={formData.mobilenumber}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all ${
-                  errors.mobilenumber ? 'border-red-400' : 'border-gray-300'
-                }`}
+                className={`w-full px-3 py-2 border rounded-lg ${
+                  errors.mobilenumber ? "border-red-400" : "border-gray-300"
+                } focus:ring-2 focus:ring-accent focus:border-transparent`}
                 placeholder="10-digit mobile number"
               />
               {errors.mobilenumber && (
@@ -575,7 +560,7 @@ const FeedbackForm = () => {
             </div>
           </div>
 
-          {/* Feedback Message */}
+          {/* Feedback Field */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -588,9 +573,9 @@ const FeedbackForm = () => {
               value={formData.feedback}
               onChange={handleInputChange}
               rows={4}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent resize-none transition-all ${
-                errors.feedback ? 'border-red-400' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg resize-none ${
+                errors.feedback ? "border-red-400" : "border-gray-300"
+              } focus:ring-2 focus:ring-accent focus:border-transparent`}
               placeholder="Share your experience, suggestions, or any concerns..."
             />
             {errors.feedback && (
@@ -603,7 +588,7 @@ const FeedbackForm = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 px-6 rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 px-6 rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>
@@ -625,7 +610,6 @@ const FeedbackForm = () => {
             <p className="text-red-500 text-center text-sm">{errors.submit}</p>
           )}
 
-          {/* Privacy Note */}
           <p className="text-center text-gray-500 text-xs">
             Your feedback will be reviewed before being published. We value your privacy.
           </p>
