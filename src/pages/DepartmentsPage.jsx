@@ -56,10 +56,15 @@ export default function DepartmentsPage() {
   return (
     <div className="min-h-screen bg-mute pt-36 max-sm:pt-24">
       {/* Page Header */}
-      <div className="max-w-7xl mx-auto px-4 text-center mb-8">
-        <h1 className="text-4xl max-sm:text-3xl font-extrabold text-primary mb-3">
-          Our Medical Departments
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-extrabold text-primary mb-2">
+          Medical Departments
         </h1>
+        <div className="w-24 h-1 bg-secondary rounded-full mx-auto"></div>
+        <p className="text-gray-600 mt-4 mx-auto">
+          Explore our advanced medical facilities, team moments, and events from
+          our hospital.
+        </p>
       </div>
 
       {/* Search + Filter */}
