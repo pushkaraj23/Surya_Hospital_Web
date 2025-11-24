@@ -85,6 +85,7 @@ const Header = () => {
             <NavItem name="Gallery" path="/gallery" />
             <NavItem name="Blogs" path="/blogs" />
             <NavItem name="Feedback" path="/feedback" />
+            <NavItem name="Appoinment Booking" path="/appBook" />
           </ul>
 
           {/* Desktop Contact Button */}

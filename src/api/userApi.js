@@ -108,9 +108,20 @@ export const submitFeedback = async (data) => {
 export const createContact = async (contactData) => {
   try {
     const response = await axiosInstance.post("/contact", contactData);
-    return response.data; // backend returns: { code, body, message }
+    return response.data; 
   } catch (error) {
     console.error("Error creating contact:", error);
     throw error;
+  }
+};
+
+
+export const createAppointment = async (appointmentData) => {
+  try {
+    const response = await axiosInstance.post("appointments", appointmentData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating appointment:", error);
+    throw error.response?.data || error;
   }
 };

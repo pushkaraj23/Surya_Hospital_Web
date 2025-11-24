@@ -1,3 +1,621 @@
+// import { useState, useEffect } from "react";
+// import {
+//   FiUser,
+//   FiPhone,
+//   FiMail,
+//   FiCalendar,
+//   FiClock,
+//   FiMessageCircle,
+//   FiArrowRight,
+//   FiCheck
+// } from "react-icons/fi";
+// import { MdBusinessCenter, MdLocalHospital } from "react-icons/md";
+// import {
+//   fetchDepartments,
+//   getDoctors,
+//   createAppointment
+// } from "../../api/userApi";
+
+// const AppointmentBooking = () => {
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [departments, setDepartments] = useState([]);
+//   const [doctors, setDoctors] = useState([]);
+//   const [filteredDoctors, setFilteredDoctors] = useState([]);
+
+//   const [formData, setFormData] = useState({
+//     fullName: "",
+//     mobileNumber: "",
+//     email: "",
+//     department: "",
+//     doctor: "",
+//     preferredDate: "",
+//     time: "",
+//     message: ""
+//   });
+
+//   const [errors, setErrors] = useState({});
+//   const [isSubmitted, setIsSubmitted] = useState(false);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+
+//   // Load departments + doctors
+//   useEffect(() => {
+//     const loadData = async () => {
+//       try {
+//         setLoading(true);
+//         const [deptsData, docsData] = await Promise.all([
+//           fetchDepartments(),
+//           getDoctors()
+//         ]);
+
+//         setDepartments(deptsData);
+//         setDoctors(docsData);
+//       } catch (err) {
+//         setError(err.message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     loadData();
+//   }, []);
+
+//   // Filter doctors by department
+//   useEffect(() => {
+//     if (formData.department) {
+//       const filtered = doctors.filter(
+//         (doctor) =>
+//           doctor.departmentid === parseInt(formData.department)
+//       );
+//       setFilteredDoctors(filtered);
+//     } else {
+//       setFilteredDoctors([]);
+//     }
+//   }, [formData.department, doctors]);
+
+//   // Input handler
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData((prev) => ({ ...prev, [name]: value }));
+
+//     if (errors[name]) {
+//       setErrors((prev) => ({ ...prev, [name]: "" }));
+//     }
+//   };
+
+//   // Validation
+//   const validateForm = () => {
+//     const newErrors = {};
+
+//     if (!formData.fullName.trim())
+//       newErrors.fullName = "Full name is required";
+
+//     if (!formData.mobileNumber.trim())
+//       newErrors.mobileNumber = "Mobile number is required";
+//     else if (!/^\d{10}$/.test(formData.mobileNumber))
+//       newErrors.mobileNumber = "Enter valid 10-digit mobile number";
+
+//     if (
+//       formData.email &&
+//       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+//     )
+//       newErrors.email = "Enter valid email";
+
+//     if (!formData.department)
+//       newErrors.department = "Select a department";
+
+//     if (!formData.doctor)
+//       newErrors.doctor = "Select a doctor";
+
+//     if (!formData.preferredDate)
+//       newErrors.preferredDate = "Select a date";
+
+//     if (!formData.time)
+//       newErrors.time = "Select a time slot";
+
+//     setErrors(newErrors);
+//     return Object.keys(newErrors).length === 0;
+//   };
+
+//   // Submit handler
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!validateForm()) return;
+
+//     setIsSubmitting(true);
+
+//     const appointmentData = {
+//       fullName: formData.fullName,
+//       mobilenumber: formData.mobileNumber,
+//       email: formData.email || null,
+//       departmentid: parseInt(formData.department),
+//       doctorid: parseInt(formData.doctor),
+//       preferreddate: formData.preferredDate,
+//       preferredtime: formData.time,
+//       message: formData.message || null,
+//       status: "pending"
+//     };
+
+//     try {
+//       await createAppointment(appointmentData);
+//       setIsSubmitted(true);
+
+//       // Auto reset
+//       setTimeout(() => {
+//         setIsSubmitted(false);
+//       }, 3000);
+
+//       setFormData({
+//         fullName: "",
+//         mobileNumber: "",
+//         email: "",
+//         department: "",
+//         doctor: "",
+//         preferredDate: "",
+//         time: "",
+//         message: ""
+//       });
+//       setFilteredDoctors([]);
+//     } catch (error) {
+//       setErrors({
+//         submit:
+//           error.message ||
+//           "Failed to book appointment. Please try again."
+//       });
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   // Helpers
+//   const getDoctorName = (doctorId) => {
+//     const doctor = doctors.find(
+//       (d) => d.id === parseInt(doctorId)
+//     );
+//     return doctor ? doctor.fullname : "";
+//   };
+
+//   const getDepartmentName = (deptId) => {
+//     const dept = departments.find(
+//       (d) => d.id === parseInt(deptId)
+//     );
+//     return dept ? dept.name : "";
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-100 flex items-center justify-center">
+//         <div className="text-center">
+//           <div className="animate-spin h-16 w-16 border-b-2 border-amber-600 rounded-full mx-auto mb-4"></div>
+//           <p className="text-gray-600 text-lg">
+//             Loading Appointment Form...
+//           </p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+//       <div className="max-w-6xl mx-auto mt-20 py-20">
+
+//         {/* SUCCESS POPUP MODAL */}
+//         {isSubmitted && (
+//           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+//             <div className="bg-white p-8 rounded-xl shadow-xl max-w-md w-full text-center animate-fadeIn">
+//               <h2 className="text-2xl font-bold text-gray-800 mb-4">
+//                 Appointment Booked Successfully!
+//               </h2>
+
+//               <p className="text-gray-600 mb-4">
+//                 Your appointment with{" "}
+//                 <strong>{getDoctorName(formData.doctor)}</strong>{" "}
+//                 from <strong>{getDepartmentName(formData.department)}</strong>{" "}
+//                 department is scheduled.
+//               </p>
+
+//               <p className="text-gray-600 mb-2">
+//                 <strong>Date:</strong>{" "}
+//                 {new Date(
+//                   formData.preferredDate
+//                 ).toLocaleDateString()}
+//               </p>
+
+//               <p className="text-gray-600 mb-6">
+//                 <strong>Time:</strong> {formData.time}
+//               </p>
+
+//               <button
+//                 onClick={() => setIsSubmitted(false)}
+//                 className="bg-amber-600 text-white px-6 py-2 rounded-lg shadow hover:bg-amber-700 transition"
+//               >
+//                 OK
+//               </button>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* PAGE HEADER */}
+//         <div className="text-center mb-12">
+//           <h1 className="text-4xl font-bold text-gray-800 mb-4">
+//             Book Your Appointment
+//           </h1>
+//           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+//             Schedule your visit with our expert medical team.
+//           </p>
+//         </div>
+
+//         {/* MAIN CARD */}
+//         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+//           <div className="grid grid-cols-1 lg:grid-cols-3">
+
+//             {/* LEFT SIDEBAR */}
+//             <div className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 lg:p-10">
+//               <h3 className="text-xl font-bold mb-6">
+//                 Why Choose Our Hospital?
+//               </h3>
+
+//               <div className="space-y-6">
+//                 {[ "Expert Doctors", "Quick Appointments", "24/7 Support" ].map(
+//                   (item, i) => (
+//                     <div
+//                       key={i}
+//                       className="flex items-start space-x-3"
+//                     >
+//                       <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center mt-1">
+//                         <FiCheck className="text-white text-sm" />
+//                       </div>
+//                       <p className="font-semibold">
+//                         {item}
+//                       </p>
+//                     </div>
+//                   )
+//                 )}
+//               </div>
+//             </div>
+
+//             {/* RIGHT FORM */}
+//             <div className="lg:col-span-2 p-8">
+//               {errors.submit && (
+//                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+//                   <p className="text-red-600 text-sm">
+//                     {errors.submit}
+//                   </p>
+//                 </div>
+//               )}
+
+//               <form onSubmit={handleSubmit} className="space-y-6">
+
+//                 {/* PERSONAL INFO */}
+//                 <div>
+//                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+//                     <FiUser className="mr-2 text-amber-600" />
+//                     Personal Information
+//                   </h3>
+
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+//                     {/* FULL NAME */}
+//                     <div>
+//                       <label className="text-sm font-medium text-gray-700">
+//                         Full Name *
+//                       </label>
+//                       <div className="relative">
+//                         <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+//                         <input
+//                           type="text"
+//                           name="fullName"
+//                           value={formData.fullName}
+//                           onChange={handleInputChange}
+//                           className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+//                             errors.fullName
+//                               ? "border-red-500"
+//                               : "border-gray-300"
+//                           }`}
+//                           placeholder="Enter your full name"
+//                         />
+//                       </div>
+//                       {errors.fullName && (
+//                         <p className="text-red-500 text-sm">
+//                           {errors.fullName}
+//                         </p>
+//                       )}
+//                     </div>
+
+//                     {/* MOBILE NUMBER */}
+//                     <div>
+//                       <label className="text-sm font-medium text-gray-700">
+//                         Mobile Number *
+//                       </label>
+//                       <div className="relative">
+//                         <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+//                         <input
+//                           type="tel"
+//                           name="mobileNumber"
+//                           value={formData.mobileNumber}
+//                           onChange={handleInputChange}
+//                           className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+//                             errors.mobileNumber
+//                               ? "border-red-500"
+//                               : "border-gray-300"
+//                           }`}
+//                           placeholder="10-digit mobile number"
+//                         />
+//                       </div>
+//                       {errors.mobileNumber && (
+//                         <p className="text-red-500 text-sm">
+//                           {errors.mobileNumber}
+//                         </p>
+//                       )}
+//                     </div>
+
+//                     {/* EMAIL */}
+//                     <div className="md:col-span-2">
+//                       <label className="text-sm font-medium text-gray-700">
+//                         Email Address
+//                       </label>
+//                       <div className="relative">
+//                         <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+//                         <input
+//                           type="email"
+//                           name="email"
+//                           value={formData.email}
+//                           onChange={handleInputChange}
+//                           className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+//                             errors.email
+//                               ? "border-red-500"
+//                               : "border-gray-300"
+//                           }`}
+//                           placeholder="Enter your email (optional)"
+//                         />
+//                       </div>
+//                       {errors.email && (
+//                         <p className="text-red-500 text-sm">
+//                           {errors.email}
+//                         </p>
+//                       )}
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* MEDICAL INFO */}
+//                 <div>
+//                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+//                     <MdLocalHospital className="mr-2 text-amber-600" />
+//                     Medical Information
+//                   </h3>
+
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+//                     {/* DEPARTMENT */}
+//                     <div>
+//                       <label className="text-sm font-medium text-gray-700">
+//                         Department *
+//                       </label>
+//                       <div className="relative">
+//                         <MdBusinessCenter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+//                         <select
+//                           name="department"
+//                           value={formData.department}
+//                           onChange={handleInputChange}
+//                           className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+//                             errors.department
+//                               ? "border-red-500"
+//                               : "border-gray-300"
+//                           }`}
+//                         >
+//                           <option value="">Select Department</option>
+//                           {departments.map((dept) => (
+//                             <option key={dept.id} value={dept.id}>
+//                               {dept.name}
+//                             </option>
+//                           ))}
+//                         </select>
+//                       </div>
+//                       {errors.department && (
+//                         <p className="text-red-500 text-sm">
+//                           {errors.department}
+//                         </p>
+//                       )}
+//                     </div>
+
+//                     {/* DOCTOR */}
+//                     <div>
+//                       <label className="text-sm font-medium text-gray-700">
+//                         Doctor *
+//                       </label>
+//                       <div className="relative">
+//                         <MdLocalHospital className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+//                         <select
+//                           name="doctor"
+//                           value={formData.doctor}
+//                           onChange={handleInputChange}
+//                           disabled={
+//                             !formData.department ||
+//                             filteredDoctors.length === 0
+//                           }
+//                           className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+//                             errors.doctor
+//                               ? "border-red-500"
+//                               : "border-gray-300"
+//                           } ${
+//                             !formData.department ||
+//                             filteredDoctors.length === 0
+//                               ? "opacity-50 cursor-not-allowed"
+//                               : ""
+//                           }`}
+//                         >
+//                           <option value="">Select Doctor</option>
+//                           {filteredDoctors.map((doctor) => (
+//                             <option key={doctor.id} value={doctor.id}>
+//                               {doctor.fullname} - {doctor.specialization}
+//                             </option>
+//                           ))}
+//                         </select>
+//                       </div>
+//                       {errors.doctor && (
+//                         <p className="text-red-500 text-sm">
+//                           {errors.doctor}
+//                         </p>
+//                       )}
+
+//                       {formData.department &&
+//                         filteredDoctors.length === 0 && (
+//                           <p className="text-yellow-600 text-sm">
+//                             No doctors available for this department
+//                           </p>
+//                         )}
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* APPOINTMENT TIMING */}
+//                 <div>
+//                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+//                     <FiClock className="mr-2 text-amber-600" />
+//                     Appointment Timing
+//                   </h3>
+
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+//                     {/* DATE */}
+//                     <div>
+//                       <label className="text-sm font-medium text-gray-700">
+//                         Preferred Date *
+//                       </label>
+//                       <div className="relative">
+//                         <FiCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+//                         <input
+//                           type="date"
+//                           name="preferredDate"
+//                           value={formData.preferredDate}
+//                           onChange={handleInputChange}
+//                           min={new Date()
+//                             .toISOString()
+//                             .split("T")[0]}
+//                           className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+//                             errors.preferredDate
+//                               ? "border-red-500"
+//                               : "border-gray-300"
+//                           }`}
+//                         />
+//                       </div>
+//                       {errors.preferredDate && (
+//                         <p className="text-red-500 text-sm">
+//                           {errors.preferredDate}
+//                         </p>
+//                       )}
+//                     </div>
+
+//                     {/* TIME */}
+//                     <div>
+//                       <label className="text-sm font-medium text-gray-700">
+//                         Preferred Time *
+//                       </label>
+//                       <div className="relative">
+//                         <FiClock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+//                         <select
+//                           name="time"
+//                           value={formData.time}
+//                           onChange={handleInputChange}
+//                           className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+//                             errors.time
+//                               ? "border-red-500"
+//                               : "border-gray-300"
+//                           }`}
+//                         >
+//                           <option value="">Select Time</option>
+//                           <option value="09:00-10:00">
+//                             09:00 AM - 10:00 AM
+//                           </option>
+//                           <option value="10:00-11:00">
+//                             10:00 AM - 11:00 AM
+//                           </option>
+//                           <option value="11:00-12:00">
+//                             11:00 AM - 12:00 PM
+//                           </option>
+//                           <option value="14:00-15:00">
+//                             02:00 PM - 03:00 PM
+//                           </option>
+//                           <option value="15:00-16:00">
+//                             03:00 PM - 04:00 PM
+//                           </option>
+//                           <option value="16:00-17:00">
+//                             04:00 PM - 05:00 PM
+//                           </option>
+//                         </select>
+//                       </div>
+//                       {errors.time && (
+//                         <p className="text-red-500 text-sm">
+//                           {errors.time}
+//                         </p>
+//                       )}
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* MESSAGE */}
+//                 <div>
+//                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+//                     <FiMessageCircle className="mr-2 text-amber-600" />
+//                     Additional Information
+//                   </h3>
+
+//                   <textarea
+//                     name="message"
+//                     value={formData.message}
+//                     onChange={handleInputChange}
+//                     rows={4}
+//                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
+//                     placeholder="Describe your symptoms..."
+//                   ></textarea>
+//                 </div>
+
+//                 {/* SUBMIT BUTTON */}
+//                 <button
+//                   type="submit"
+//                   disabled={isSubmitting}
+//                   className={`w-full bg-gradient-to-r from-primary via-secondary to-accent text-white py-4 px-6 rounded-lg font-semibold text-lg shadow-lg flex items-center justify-center space-x-2 ${
+//                     isSubmitting
+//                       ? "opacity-60 cursor-not-allowed"
+//                       : "hover:scale-[1.03] transition"
+//                   }`}
+//                 >
+//                   {isSubmitting ? (
+//                     <>
+//                       <div className="animate-spin h-5 w-5 border-b-2 border-white rounded-full"></div>
+//                       <span>Booking...</span>
+//                     </>
+//                   ) : (
+//                     <>
+//                       <span>Book Appointment Now</span>
+//                       <FiArrowRight />
+//                     </>
+//                   )}
+//                 </button>
+//               </form>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* SUPPORT */}
+//         <div className="text-center mt-8 text-gray-600">
+//           <p>
+//             Need help? Call <strong>+91 8888-6890-61</strong>
+//           </p>
+//           <p className="text-sm mt-1">
+//             Available 24/7 for emergencies
+//           </p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AppointmentBooking;
+
+
+
 import { useState, useEffect } from "react";
 import {
   FiUser,
@@ -10,27 +628,19 @@ import {
   FiCheck
 } from "react-icons/fi";
 import { MdBusinessCenter, MdLocalHospital } from "react-icons/md";
-
-// Mock data for departments and doctors
-const MOCK_DEPARTMENTS = [
-  { id: 1, name: "Cardiology" },
-  { id: 2, name: "Neurology" },
-  { id: 3, name: "Orthopedics" },
-  { id: 4, name: "Pediatrics" },
-  { id: 5, name: "Dermatology" },
-];
-
-const MOCK_DOCTORS = [
-  { id: 1, name: "Dr. Sarah Johnson", departmentId: 1 },
-  { id: 2, name: "Dr. Michael Chen", departmentId: 1 },
-  { id: 3, name: "Dr. Emily Rodriguez", departmentId: 2 },
-  { id: 4, name: "Dr. James Wilson", departmentId: 3 },
-  { id: 5, name: "Dr. Lisa Thompson", departmentId: 4 },
-  { id: 6, name: "Dr. Robert Brown", departmentId: 5 },
-];
+import {
+  fetchDepartments,
+  getDoctors,
+  createAppointment
+} from "../../api/userApi";
 
 const AppointmentBooking = () => {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [departments, setDepartments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
+
   const [formData, setFormData] = useState({
     fullName: "",
     mobileNumber: "",
@@ -39,29 +649,49 @@ const AppointmentBooking = () => {
     doctor: "",
     preferredDate: "",
     time: "",
-    message: "",
+    message: ""
   });
-  const [filteredDoctors, setFilteredDoctors] = useState([]);
+
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Load departments + doctors
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [deptsData, docsData] = await Promise.all([
+          fetchDepartments(),
+          getDoctors()
+        ]);
+
+        setDepartments(deptsData);
+        setDoctors(docsData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, []);
 
+  // Filter doctors by department
   useEffect(() => {
     if (formData.department) {
-      const filtered = MOCK_DOCTORS.filter(
-        (d) => d.departmentId === parseInt(formData.department)
+      const filtered = doctors.filter(
+        (doctor) =>
+          doctor.departmentid === parseInt(formData.department)
       );
       setFilteredDoctors(filtered);
-      setFormData((prev) => ({ ...prev, doctor: "" }));
     } else {
       setFilteredDoctors([]);
     }
-  }, [formData.department]);
+  }, [formData.department, doctors]);
 
+  // Input handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -71,39 +701,68 @@ const AppointmentBooking = () => {
     }
   };
 
+  // Validation
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!formData.fullName.trim())
+      newErrors.fullName = "Full name is required";
+
     if (!formData.mobileNumber.trim())
       newErrors.mobileNumber = "Mobile number is required";
-    else if (!/^\d{10}$/.test(formData.mobileNumber.replace(/\D/g, "")))
-      newErrors.mobileNumber = "Please enter a valid 10-digit mobile number";
+    else if (!/^\d{10}$/.test(formData.mobileNumber))
+      newErrors.mobileNumber = "Enter valid 10-digit mobile number";
 
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-      newErrors.email = "Please enter a valid email address";
+    if (
+      formData.email &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+    )
+      newErrors.email = "Enter valid email";
 
     if (!formData.department)
-      newErrors.department = "Please select a department";
+      newErrors.department = "Select a department";
 
-    if (!formData.doctor) newErrors.doctor = "Please select a doctor";
+    if (!formData.doctor)
+      newErrors.doctor = "Select a doctor";
 
     if (!formData.preferredDate)
-      newErrors.preferredDate = "Please select a preferred date";
+      newErrors.preferredDate = "Select a date";
+
+    if (!formData.time)
+      newErrors.time = "Select a time slot";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  // Submit handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    console.log("Appointment booked:", formData);
-    setIsSubmitted(true);
+    setIsSubmitting(true);
 
-    // Reset form after success
-    setTimeout(() => {
+    const appointmentData = {
+      fullName: formData.fullName,
+      mobilenumber: formData.mobileNumber,
+      email: formData.email || null,
+      departmentid: parseInt(formData.department),
+      doctorid: parseInt(formData.doctor),
+      preferreddate: formData.preferredDate,
+      preferredtime: formData.time,
+      message: formData.message || null,
+      status: "pending"
+    };
+
+    try {
+      await createAppointment(appointmentData);
+      setIsSubmitted(true);
+
+      // Auto reset
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 3000);
+
       setFormData({
         fullName: "",
         mobileNumber: "",
@@ -112,380 +771,429 @@ const AppointmentBooking = () => {
         doctor: "",
         preferredDate: "",
         time: "",
-        message: "",
+        message: ""
       });
       setFilteredDoctors([]);
-      setIsSubmitted(false);
-    }, 3000);
+    } catch (error) {
+      setErrors({
+        submit:
+          error.message ||
+          "Failed to book appointment. Please try again."
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Helpers
+  const getDoctorName = (doctorId) => {
+    const doctor = doctors.find(
+      (d) => d.id === parseInt(doctorId)
+    );
+    return doctor ? doctor.fullname : "";
+  };
+
+  const getDepartmentName = (deptId) => {
+    const dept = departments.find(
+      (d) => d.id === parseInt(deptId)
+    );
+    return dept ? dept.name : "";
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading Appointment Form...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen mt-20 bg-gradient-to-r from-primary via-secondary to-accent flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <FiCheck className="text-green-600 text-3xl" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Appointment Booked Successfully!
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Thank you for booking with Surya Hospital. We'll contact you shortly to confirm your appointment.
+          <div className="animate-spin h-16 w-16 border-b-2 border-amber-600 rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">
+            Loading Appointment Form...
           </p>
-          <div className="animate-pulse text-sm text-gray-500">
-            Redirecting back to form...
-          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
-            <FiCalendar className="text-white text-2xl" />
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto mt-20 py-20">
+
+        {/* SUCCESS POPUP MODAL */}
+        {isSubmitted && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="bg-white p-5 rounded-xl shadow-xl max-w-md w-full text-center animate-fadeIn">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiCheck className="text-green-600 text-5xl" />
+              </div>
+
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                Confirm Appointment
+              </h2>
+            </div>
           </div>
+        )}
+
+        {/* PAGE HEADER */}
+        <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
             Book Your Appointment
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Schedule your visit with our expert medical team. Quick, easy, and secure booking process.
+            Schedule your visit with our expert medical team.
           </p>
         </div>
 
-        {/* Progress Steps */}
-        <div className="flex items-center justify-center mb-8">
-          <div className="flex items-center">
-            <div className="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-semibold">
-              1
-            </div>
-            <div className="w-24 h-1 bg-amber-600 mx-2"></div>
-            <div className="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-semibold">
-              2
-            </div>
-            <div className="w-24 h-1 bg-amber-600 mx-2"></div>
-            <div className="w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center font-semibold">
-              3
-            </div>
-          </div>
-        </div>
-
-        {/* Main Form Card */}
+        {/* MAIN CARD */}
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-3">
-            
-            {/* Sidebar */}
-            <div className="bg-gradient-to-r from-primary to-secondary text-white p-8 lg:p-10">
-              <h3 className="text-xl font-bold mb-6">Why Choose Surya Hospital?</h3>
+
+            {/* LEFT SIDEBAR */}
+            <div className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 lg:p-10">
+              <h3 className="text-xl font-bold mb-6">
+                Why Choose Our Hospital?
+              </h3>
+
               <div className="space-y-6">
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center mt-1">
-                    <FiCheck className="text-white text-sm" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">Expert Doctors</h4>
-                    <p className="text-blue-100 text-sm">Board-certified specialists</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center mt-1">
-                    <FiCheck className="text-white text-sm" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">Quick Appointments</h4>
-                    <p className="text-blue-100 text-sm">Same-day slots available</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center mt-1">
-                    <FiCheck className="text-white text-sm" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">24/7 Support</h4>
-                    <p className="text-blue-100 text-sm">Always here to help you</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-8 p-4 bg-white bg-opacity-10 rounded-lg">
-                <p className="text-sm text-blue-100">
-                  <strong>Emergency?</strong> Call us directly at{" "}
-                  <span className="font-bold">+91 8888-6890-61</span>
-                </p>
+                {["Expert Doctors", "Quick Appointments", "24/7 Support"].map(
+                  (item, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start space-x-3"
+                    >
+                      <div className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center mt-1">
+                        <FiCheck className="text-white text-sm" />
+                      </div>
+                      <p className="font-semibold">
+                        {item}
+                      </p>
+                    </div>
+                  )
+                )}
               </div>
             </div>
 
-            {/* Form Content */}
+            {/* RIGHT FORM */}
             <div className="lg:col-span-2 p-8">
+              {errors.submit && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-600 text-sm">
+                    {errors.submit}
+                  </p>
+                </div>
+              )}
+
               <form onSubmit={handleSubmit} className="space-y-6">
-                
-                {/* Personal Information Section */}
+
+                {/* PERSONAL INFO */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                     <FiUser className="mr-2 text-amber-600" />
                     Personal Information
                   </h3>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Full Name */}
-                    <div className="space-y-2">
+
+                    {/* FULL NAME */}
+                    <div>
                       <label className="text-sm font-medium text-gray-700">
                         Full Name *
                       </label>
                       <div className="relative">
-                        <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                           type="text"
                           name="fullName"
                           value={formData.fullName}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all ${
-                            errors.fullName ? "border-red-500" : "border-gray-300"
-                          }`}
+                          className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.fullName
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            }`}
                           placeholder="Enter your full name"
                         />
                       </div>
                       {errors.fullName && (
-                        <p className="text-red-500 text-sm">{errors.fullName}</p>
+                        <p className="text-red-500 text-sm">
+                          {errors.fullName}
+                        </p>
                       )}
                     </div>
 
-                    {/* Mobile Number */}
-                    <div className="space-y-2">
+                    {/* MOBILE NUMBER */}
+                    <div>
                       <label className="text-sm font-medium text-gray-700">
                         Mobile Number *
                       </label>
                       <div className="relative">
-                        <FiPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                           type="tel"
                           name="mobileNumber"
                           value={formData.mobileNumber}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all ${
-                            errors.mobileNumber ? "border-red-500" : "border-gray-300"
-                          }`}
+                          className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.mobileNumber
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            }`}
                           placeholder="10-digit mobile number"
                         />
                       </div>
                       {errors.mobileNumber && (
-                        <p className="text-red-500 text-sm">{errors.mobileNumber}</p>
+                        <p className="text-red-500 text-sm">
+                          {errors.mobileNumber}
+                        </p>
                       )}
                     </div>
 
-                    {/* Email */}
-                    <div className="space-y-2 md:col-span-2">
+                    {/* EMAIL */}
+                    <div className="md:col-span-2">
                       <label className="text-sm font-medium text-gray-700">
                         Email Address
                       </label>
                       <div className="relative">
-                        <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                           type="email"
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all ${
-                            errors.email ? "border-red-500" : "border-gray-300"
-                          }`}
+                          className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.email
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            }`}
                           placeholder="Enter your email (optional)"
                         />
                       </div>
                       {errors.email && (
-                        <p className="text-red-500 text-sm">{errors.email}</p>
+                        <p className="text-red-500 text-sm">
+                          {errors.email}
+                        </p>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* Medical Information Section */}
+                {/* MEDICAL INFO */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                     <MdLocalHospital className="mr-2 text-amber-600" />
                     Medical Information
                   </h3>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Department */}
-                    <div className="space-y-2">
+
+                    {/* DEPARTMENT */}
+                    <div>
                       <label className="text-sm font-medium text-gray-700">
                         Department *
                       </label>
                       <div className="relative">
-                        <MdBusinessCenter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <MdBusinessCenter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <select
                           name="department"
                           value={formData.department}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 appearance-none bg-white ${
-                            errors.department ? "border-red-500" : "border-gray-300"
-                          }`}
+                          className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.department
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            }`}
                         >
                           <option value="">Select Department</option>
-                          {MOCK_DEPARTMENTS.map((d) => (
-                            <option key={d.id} value={d.id}>
-                              {d.name}
+                          {departments.map((dept) => (
+                            <option key={dept.id} value={dept.id}>
+                              {dept.name}
                             </option>
                           ))}
                         </select>
                       </div>
                       {errors.department && (
-                        <p className="text-red-500 text-sm">{errors.department}</p>
+                        <p className="text-red-500 text-sm">
+                          {errors.department}
+                        </p>
                       )}
                     </div>
 
-                    {/* Doctor */}
-                    <div className="space-y-2">
+                    {/* DOCTOR */}
+                    <div>
                       <label className="text-sm font-medium text-gray-700">
                         Doctor *
                       </label>
                       <div className="relative">
-                        <MdLocalHospital className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <MdLocalHospital className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <select
                           name="doctor"
                           value={formData.doctor}
                           onChange={handleInputChange}
-                          disabled={!formData.department}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 appearance-none bg-white ${
-                            errors.doctor ? "border-red-500" : "border-gray-300"
-                          } ${
-                            !formData.department ? "opacity-50 cursor-not-allowed" : ""
-                          }`}
+                          disabled={
+                            !formData.department ||
+                            filteredDoctors.length === 0
+                          }
+                          className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.doctor
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            } ${!formData.department ||
+                              filteredDoctors.length === 0
+                              ? "opacity-50 cursor-not-allowed"
+                              : ""
+                            }`}
                         >
                           <option value="">Select Doctor</option>
-                          {filteredDoctors.map((doc) => (
-                            <option key={doc.id} value={doc.id}>
-                              {doc.name}
+                          {filteredDoctors.map((doctor) => (
+                            <option key={doctor.id} value={doctor.id}>
+                              {doctor.fullname} - {doctor.specialization}
                             </option>
                           ))}
                         </select>
                       </div>
                       {errors.doctor && (
-                        <p className="text-red-500 text-sm">{errors.doctor}</p>
+                        <p className="text-red-500 text-sm">
+                          {errors.doctor}
+                        </p>
                       )}
+
+                      {formData.department &&
+                        filteredDoctors.length === 0 && (
+                          <p className="text-yellow-600 text-sm">
+                            No doctors available for this department
+                          </p>
+                        )}
                     </div>
                   </div>
                 </div>
 
-                {/* Appointment Timing Section */}
+                {/* APPOINTMENT TIMING */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                     <FiClock className="mr-2 text-amber-600" />
                     Appointment Timing
                   </h3>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Preferred Date */}
-                    <div className="space-y-2">
+
+                    {/* DATE */}
+                    <div>
                       <label className="text-sm font-medium text-gray-700">
                         Preferred Date *
                       </label>
                       <div className="relative">
-                        <FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <FiCalendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                           type="date"
                           name="preferredDate"
                           value={formData.preferredDate}
                           onChange={handleInputChange}
-                          min={new Date().toISOString().split("T")[0]}
-                          className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 ${
-                            errors.preferredDate ? "border-red-500" : "border-gray-300"
-                          }`}
+                          min={new Date()
+                            .toISOString()
+                            .split("T")[0]}
+                          className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.preferredDate
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            }`}
                         />
                       </div>
                       {errors.preferredDate && (
-                        <p className="text-red-500 text-sm">{errors.preferredDate}</p>
+                        <p className="text-red-500 text-sm">
+                          {errors.preferredDate}
+                        </p>
                       )}
                     </div>
 
-                    {/* Time Slot */}
-                    <div className="space-y-2">
+                    {/* TIME */}
+                    <div>
                       <label className="text-sm font-medium text-gray-700">
-                        Preferred Time
+                        Preferred Time *
                       </label>
                       <div className="relative">
-                        <FiClock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <FiClock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <select
                           name="time"
                           value={formData.time}
                           onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 appearance-none bg-white"
+                          className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.time
+                            ? "border-red-500"
+                            : "border-gray-300"
+                            }`}
                         >
-                          <option value="">Select Time Slot</option>
-                          <option value="09:00-10:00">09:00 AM - 10:00 AM</option>
-                          <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
-                          <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
-                          <option value="14:00-15:00">02:00 PM - 03:00 PM</option>
-                          <option value="15:00-16:00">03:00 PM - 04:00 PM</option>
-                          <option value="16:00-17:00">04:00 PM - 05:00 PM</option>
+                          <option value="">Select Time</option>
+                          <option value="09:00-10:00">
+                            09:00 AM - 10:00 AM
+                          </option>
+                          <option value="10:00-11:00">
+                            10:00 AM - 11:00 AM
+                          </option>
+                          <option value="11:00-12:00">
+                            11:00 AM - 12:00 PM
+                          </option>
+                          <option value="14:00-15:00">
+                            02:00 PM - 03:00 PM
+                          </option>
+                          <option value="15:00-16:00">
+                            03:00 PM - 04:00 PM
+                          </option>
+                          <option value="16:00-17:00">
+                            04:00 PM - 05:00 PM
+                          </option>
                         </select>
                       </div>
+                      {errors.time && (
+                        <p className="text-red-500 text-sm">
+                          {errors.time}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
 
-                {/* Additional Information */}
+                {/* MESSAGE */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                    <FiMessageCircle className="mr-2 text-am-600" />
+                    <FiMessageCircle className="mr-2 text-amber-600" />
                     Additional Information
                   </h3>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">
-                      Message / Symptoms
-                    </label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      rows={4}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 resize-none transition-all"
-                      placeholder="Describe your symptoms or any additional information that might help our doctors..."
-                    />
-                  </div>
+
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    rows={4}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500"
+                    placeholder="Describe your symptoms..."
+                  ></textarea>
                 </div>
 
-                {/* Submit Button */}
+                {/* SUBMIT BUTTON */}
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-primary via-secondary to-accent text-white py-4 px-6 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center space-x-2"
+                  disabled={isSubmitting}
+                  className={`w-full bg-gradient-to-r from-primary via-secondary to-accent text-white py-4 px-6 rounded-lg font-semibold text-lg shadow-lg flex items-center justify-center space-x-2 ${isSubmitting
+                    ? "opacity-60 cursor-not-allowed"
+                    : "hover:scale-[1.03] transition"
+                    }`}
                 >
-                  <span>Book Appointment Now</span>
-                  <FiArrowRight className="text-xl" />
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin h-5 w-5 border-b-2 border-white rounded-full"></div>
+                      <span>Booking...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Book Appointment Now</span>
+                      <FiArrowRight />
+                    </>
+                  )}
                 </button>
-
-                {/* Privacy Note */}
-                <p className="text-center text-gray-500 text-sm">
-                  By booking an appointment, you agree to our{" "}
-                  <a href="#" className="text-amber-600 hover:underline">
-                    Privacy Policy
-                  </a>{" "}
-                  and{" "}
-                  <a href="#" className="text-amber-600 hover:underline">
-                    Terms of Service
-                  </a>
-                </p>
               </form>
             </div>
           </div>
         </div>
 
-        {/* Support Info */}
+        {/* SUPPORT */}
         <div className="text-center mt-8 text-gray-600">
-          <p>Need immediate assistance? Call us at <strong>+91 8888-6890-61</strong></p>
-          <p className="text-sm mt-2">Available 24/7 for emergency services</p>
+          <p>
+            Need help? Call <strong>+91 8888-6890-61</strong>
+          </p>
+          <p className="text-sm mt-1">
+            Available 24/7 for emergencies
+          </p>
         </div>
       </div>
     </div>

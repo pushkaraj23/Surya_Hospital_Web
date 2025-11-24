@@ -574,6 +574,7 @@
 // BlogPage.jsx
 import React, { useState, useEffect } from 'react';
 import { getBlogs } from '../api/userApi'; 
+import { FiArrowLeft } from 'react-icons/fi';
 
 /* ----------------------------------------------------------
    MAIN BLOG COMPONENT
@@ -619,11 +620,7 @@ const BlogPage = () => {
         setError(null);
       } catch (err) {
         console.error("❌ Error loading blogs:", err);
-        setError(err.message);
-        // Fallback to sample data if API fails
-        const sampleArticles = getSampleArticles();
-        setArticles(sampleArticles);
-        setFilteredArticles(sampleArticles);
+        setError(err.message);      
       } finally {
         setLoading(false);
       }
@@ -641,23 +638,6 @@ const BlogPage = () => {
     return `${readTime} min read`;
   };
 
-  // Fallback sample articles
-  const getSampleArticles = () => [
-    {
-      id: 1,
-      title: "10 Essential Health Tips for a Better Lifestyle",
-      slug: "10-essential-health-tips-for-better-lifestyle",
-      image: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      category: "Lifestyle",
-      content: `<p>Living a healthy lifestyle is crucial for maintaining overall well-being and preventing chronic diseases.</p>`,
-      excerpt: "Discover 10 practical health tips that can significantly improve your quality of life and overall well-being.",
-      author: "Dr. Sarah Johnson",
-      createdat: "2025-11-15T18:30:00.000Z",
-      updatedat: null,
-      isactive: true,
-      readTime: "5 min read"
-    }
-  ];
 
   // Filter articles by category and search
   useEffect(() => {
@@ -745,7 +725,7 @@ const BlogPage = () => {
 
   // Render Article List View
   return (
-    <div className="min-h-screen mt-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen mt-20 bg-gradient-to-br py-5 from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -931,22 +911,7 @@ const ArticleDetail = ({ article, onBack, relatedArticles }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-50">
-      {/* Navigation */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <button
-            onClick={onBack}
-            className="flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Articles
-          </button>
-        </div>
-      </div>
-
+    <div className="min-h-screen bg-gradient-to-br mt-20 from-blue-50 to-blue-50">
       {/* Article Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <article className="bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -1001,42 +966,18 @@ const ArticleDetail = ({ article, onBack, relatedArticles }) => {
           </div>
         </article>
 
-        {/* Related Articles */}
-        {relatedArticles.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Articles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedArticles.map(relatedArticle => (
-                <div 
-                  key={relatedArticle.id} 
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-                  onClick={() => {
-                    // You can implement navigation to this article here
-                    // For now, it will just scroll to top
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                >
-                  <img
-                    src={relatedArticle.image}
-                    alt={relatedArticle.title}
-                    className="w-full h-32 object-cover"
-                    onError={(e) => {
-                      e.target.src = "https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80";
-                    }}
-                  />
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
-                      {relatedArticle.title}
-                    </h3>
-                    <div className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors">
-                      Read Article →
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Navigation */}
+     
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <button
+            onClick={onBack}
+            className="flex items-center text-amber-600 hover:text-amber-800 font-medium transition-colors duration-200"
+          >
+            <FiArrowLeft size={24} /> <span className='p-1
+            '>Back to Articles</span>
+          </button>
+        </div>
+     
 
         {/* Call to Action */}
         <div className="mt-12 text-center">

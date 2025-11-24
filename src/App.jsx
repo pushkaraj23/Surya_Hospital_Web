@@ -29,6 +29,8 @@ function App() {
         <Route path="/appoinmentBooking" element={<AppointmentBooking />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/feedback" element={<FeedbackForm />} />
+        <Route path="/appBook" element={<AppointmentBooking />} />
+        
       </Routes>
       <Footer />
     </div>
