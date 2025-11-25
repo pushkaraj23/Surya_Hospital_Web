@@ -1,31 +1,60 @@
 import { useState, useEffect } from "react";
-import departmentsData from "../components/Departements/DepartmentsData";
 import DepartmentCard from "../components/Departements/DepartmentCard";
 import DepartmentDetail from "../components/Departements/DepartmentDetail";
 import DoctorProfile from "../components/Departements/DoctorProfile";
+import { fetchDepartments } from "../api/userApi";
 
 export default function DepartmentsPage() {
+  const [departments, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // -------------------------
+  // Fetch Departments (API)
+  // -------------------------
   useEffect(() => {
-    setTimeout(() => setLoading(false), 800);
+    async function loadDepartments() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetchDepartments(); // <- API call
+        setDepartments(response || []);
+      } catch (err) {
+        console.error("Failed to fetch departments:", err);
+        setError("Failed to load departments. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadDepartments();
   }, []);
 
-  const filteredDepartments = departmentsData.departments.filter((dept) => {
+  // -------------------------
+  // Filter Logic
+  // -------------------------
+  const filteredDepartments = departments.filter((dept) => {
+    const name = dept.name?.toLowerCase() || "";
+    const desc = dept.description?.toLowerCase() || "";
+
     const matchesSearch =
-      dept.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      dept.description.toLowerCase().includes(searchTerm.toLowerCase());
+      name.includes(searchTerm.toLowerCase()) ||
+      desc.includes(searchTerm.toLowerCase());
 
     const matchesFilter =
-      activeFilter === "all" || dept.name.toLowerCase().includes(activeFilter);
+      activeFilter === "all" || name.includes(activeFilter.toLowerCase());
 
     return matchesSearch && matchesFilter;
   });
 
+  // -------------------------
+  // Loading State
+  // -------------------------
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-mute text-primary font-semibold tracking-wide">
@@ -34,6 +63,20 @@ export default function DepartmentsPage() {
     );
   }
 
+  // -------------------------
+  // Error State
+  // -------------------------
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-mute text-red-600 font-semibold tracking-wide">
+        {error}
+      </div>
+    );
+  }
+
+  // -------------------------
+  // Doctor Profile View
+  // -------------------------
   if (selectedDoctor) {
     return (
       <DoctorProfile
@@ -43,6 +86,9 @@ export default function DepartmentsPage() {
     );
   }
 
+  // -------------------------
+  // Department Detail View
+  // -------------------------
   if (selectedDepartment) {
     return (
       <DepartmentDetail
@@ -53,6 +99,9 @@ export default function DepartmentsPage() {
     );
   }
 
+  // -------------------------
+  // Main Department List
+  // -------------------------
   return (
     <div className="min-h-screen bg-mute pt-36 max-sm:pt-24">
       {/* Page Header */}
@@ -105,18 +154,21 @@ export default function DepartmentsPage() {
                 value={activeFilter}
                 onChange={(e) => setActiveFilter(e.target.value)}
                 className="
-            w-full appearance-none bg-white border border-gray-200 rounded-xl
-            px-4 py-4 text-gray-700 shadow-md cursor-pointer
-            focus:ring-2 focus:ring-secondary focus:border-secondary transition-all
-          "
+                  w-full appearance-none bg-white border border-gray-200 rounded-xl
+                  px-4 py-4 text-gray-700 shadow-md cursor-pointer
+                  focus:ring-2 focus:ring-secondary focus:border-secondary transition-all
+                "
               >
                 <option value="all">All Departments</option>
-                <option value="cardiology">Cardiology</option>
-                <option value="neurology">Neurology</option>
-                <option value="orthopedics">Orthopedics</option>
-                <option value="pediatrics">Pediatrics</option>
-                <option value="oncology">Oncology</option>
-                <option value="dermatology">Dermatology</option>
+
+                {/* Auto-generate filter options from API data */}
+                {Array.from(new Set(departments.map((d) => d.name))).map(
+                  (name) => (
+                    <option key={name} value={name.toLowerCase()}>
+                      {name}
+                    </option>
+                  )
+                )}
               </select>
 
               {/* Dropdown Arrow */}
@@ -126,7 +178,6 @@ export default function DepartmentsPage() {
             </div>
           </div>
 
-          {/* Decorative Divider */}
           <div className="mt-6 h-[3px] w-24 bg-secondary rounded-full"></div>
         </div>
       </div>
@@ -138,7 +189,6 @@ export default function DepartmentsPage() {
             <DepartmentCard
               key={dept.id}
               department={dept}
-              onClick={() => setSelectedDepartment(dept)}
             />
           ))}
         </div>

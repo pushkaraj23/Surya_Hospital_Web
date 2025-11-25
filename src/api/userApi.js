@@ -18,8 +18,13 @@ export const fetchDepartments = async () => {
     console.warn("⚠️ Unexpected response structure:", res.data);
     return [];
   } catch (error) {
-    console.error("❌ fetchDepartments error:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch departments");
+    console.error(
+      "❌ fetchDepartments error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch departments"
+    );
   }
 };
 
@@ -28,68 +33,76 @@ export const getDoctors = async () => {
     console.log("🔍 Fetching all doctors...");
     const response = await axiosInstance.get("/doctors");
     console.log("✅ Doctors fetched:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) {
       return response.data;
     } else if (response.data && Array.isArray(response.data.data)) {
       return response.data.data;
     }
-    
+
     console.warn("⚠️ Unexpected response structure:", response.data);
     return [];
   } catch (error) {
-    console.error("❌ Error fetching doctors:", error.response?.data || error.message);
+    console.error(
+      "❌ Error fetching doctors:",
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to fetch doctors");
   }
 };
-
 
 export const getBlogs = async () => {
   try {
     const response = await axiosInstance.get("/blogs?isactive=true");
     console.log("✅ getBlogs response:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) return response.data;
     if (Array.isArray(response.data?.data)) return response.data.data;
     if (Array.isArray(response.data?.blogs)) return response.data.blogs;
-    
+
     console.warn("Unexpected response structure:", response.data);
     return [];
   } catch (error) {
-    console.error("❌ Error fetching blogs:", error.response?.data || error.message);
+    console.error(
+      "❌ Error fetching blogs:",
+      error.response?.data || error.message
+    );
     throw new Error(error.response?.data?.message || "Failed to fetch blogs");
   }
 };
-
 
 export const getGallery = async () => {
   try {
     const response = await axiosInstance.get("/gallery");
     console.log("✅ getGallery response:", response.data);
-    
+
     // Handle different response structures
     if (Array.isArray(response.data)) return response.data;
     if (Array.isArray(response.data?.data)) return response.data.data;
     if (Array.isArray(response.data?.gallery)) return response.data.gallery;
-    
+
     console.warn("Unexpected response structure:", response.data);
     return [];
   } catch (error) {
-    console.error("❌ Error fetching gallery:", error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || "Failed to fetch gallery items");
+    console.error(
+      "❌ Error fetching gallery:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch gallery items"
+    );
   }
 };
-
 
 export const getAllFeedback = async () => {
   try {
     const response = await axiosInstance.get("/feedback");
-    console.log('✅ Successfully fetched all feedback');
+    console.log("✅ Successfully fetched all feedback");
     return response.data;
   } catch (error) {
-    console.error('❌ Error fetching all feedback:', error);
+    console.error("❌ Error fetching all feedback:", error);
     throw error;
   }
 };
@@ -104,17 +117,15 @@ export const submitFeedback = async (data) => {
   }
 };
 
-
 export const createContact = async (contactData) => {
   try {
     const response = await axiosInstance.post("/contact", contactData);
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error creating contact:", error);
     throw error;
   }
 };
-
 
 export const createAppointment = async (appointmentData) => {
   try {
@@ -123,5 +134,68 @@ export const createAppointment = async (appointmentData) => {
   } catch (error) {
     console.error("Error creating appointment:", error);
     throw error.response?.data || error;
+  }
+};
+
+export const fetchDepartmentById = async (departmentId) => {
+  try {
+    console.log(`🔍 Fetching department with ID: ${departmentId}...`);
+
+    const res = await axiosInstance.get(`/departments/${departmentId}`);
+    console.log("✅ fetchDepartmentById response:", res.data);
+
+    // Handle different possible structures
+    if (res.data && typeof res.data === "object" && !Array.isArray(res.data)) {
+      return res.data; // direct object response
+    }
+
+    if (res.data?.data && typeof res.data.data === "object") {
+      return res.data.data; // { data: { ...department } }
+    }
+
+    console.warn("⚠️ Unexpected response structure:", res.data);
+    return null;
+  } catch (error) {
+    console.error(
+      "❌ fetchDepartmentById error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch department details"
+    );
+  }
+};
+
+export const getDoctorsByDepartment = async (departmentId) => {
+  try {
+    console.log(`🔍 Fetching doctors for department ID: ${departmentId}...`);
+
+    const res = await axiosInstance.get(`/doctors/department/${departmentId}`);
+    console.log("✅ getDoctorsByDepartment response:", res.data);
+
+    // Handle all possible array response patterns
+    if (Array.isArray(res.data)) {
+      return res.data;
+    }
+
+    if (res.data && Array.isArray(res.data.data)) {
+      return res.data.data;
+    }
+
+    if (res.data?.doctors && Array.isArray(res.data.doctors)) {
+      return res.data.doctors;
+    }
+
+    console.warn("⚠️ Unexpected response structure:", res.data);
+    return [];
+  } catch (error) {
+    console.error(
+      "❌ getDoctorsByDepartment error:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message ||
+        "Failed to fetch doctors for this department"
+    );
   }
 };

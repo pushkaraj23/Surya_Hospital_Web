@@ -1,16 +1,23 @@
 import { useNavigate } from "react-router-dom";
-import departmentsData from "./DepartmentsData";
 
 export default function DepartmentCard({ department }) {
   const navigate = useNavigate();
 
-  const doctors = departmentsData.doctors.filter((doctor) =>
-    department.doctors.includes(doctor.id)
-  );
+  // Extract API fields safely
+  const {
+    id,
+    name,
+    description,
+    bannerimage,
+    services = [],
+    success_rate,
+    patients,
+    experience,
+  } = department;
 
   return (
     <div
-      onClick={() => navigate(`/departments/${department.id}`)}
+      onClick={() => navigate(`/departments/${id}`)}
       className="
         group cursor-pointer rounded-2xl overflow-hidden shadow-lg 
         bg-white border border-gray-100 
@@ -18,76 +25,40 @@ export default function DepartmentCard({ department }) {
         transition-all duration-300
       "
     >
-      {/* Header Gradient */}
-      <div
-        className="
-        bg-gradient-to-br 
-        from-primary 
-        via-primary/90 
-        to-secondary 
-        p-6 text-white 
-        relative
-      "
-      >
-        {/* Floating Icon */}
-        <div
-          className="
-          w-14 h-14 rounded-xl 
-          bg-white/20 backdrop-blur-md
-          flex items-center justify-center 
-          text-2xl shadow-inner
-        "
-        >
-          {department.icon}
-        </div>
-
-        {/* Department Name */}
-        <h3 className="text-2xl font-bold mt-4 tracking-wide">
-          {department.name}
-        </h3>
-
-        {/* Short Description */}
-        <p className="text-white/90 text-sm mt-1">
-          {department.shortDescription}
-        </p>
-
-        {/* Specialists Badge */}
-        <div
-          className="
-          absolute top-4 right-4 
-          bg-white/20 backdrop-blur-md 
-          px-3 py-1 rounded-full text-xs font-semibold 
-          text-white shadow
-        "
-        >
-          {doctors.length} Specialists
-        </div>
+      {/* Header Image */}
+      <div className="h-44 w-full overflow-hidden">
+        <img
+          src={bannerimage}
+          alt={name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+        />
       </div>
 
       {/* Body */}
       <div className="p-6">
+        {/* Department Name */}
+        <h3 className="text-2xl font-bold text-primary mb-2">{name}</h3>
+
         {/* Description */}
         <p className="text-gray-600 text-sm mb-5 leading-relaxed">
-          {department.description}
+          {description?.slice(0, 120)}...
         </p>
 
         {/* Stats Section */}
         <div className="grid grid-cols-3 gap-3 mb-5">
           <div className="text-center">
             <div className="text-primary font-bold">
-              {department.stats.successRate}
+              {success_rate ? `${success_rate}%` : "—"}
             </div>
             <div className="text-xs text-gray-500">Success</div>
           </div>
           <div className="text-center">
-            <div className="text-secondary font-bold">
-              {department.stats.patients}
-            </div>
+            <div className="text-secondary font-bold">{patients ?? "—"}</div>
             <div className="text-xs text-gray-500">Patients</div>
           </div>
           <div className="text-center">
             <div className="text-accent font-bold">
-              {department.stats.experience}
+              {experience ? `${experience}+` : "—"}
             </div>
             <div className="text-xs text-gray-500">Experience</div>
           </div>
@@ -95,7 +66,7 @@ export default function DepartmentCard({ department }) {
 
         {/* Service Chips */}
         <div className="flex flex-wrap gap-2 mb-5">
-          {department.services.slice(0, 3).map((service, i) => (
+          {services.slice(0, 3).map((service, i) => (
             <span
               key={i}
               className="
@@ -108,14 +79,15 @@ export default function DepartmentCard({ department }) {
             </span>
           ))}
 
-          {department.services.length > 3 && (
+          {services.length > 3 && (
             <span
               className="
-              px-3 py-1 bg-secondary/10 text-secondary 
-              rounded-full text-xs font-medium border border-secondary/20
-            "
+                px-3 py-1 bg-secondary/10 text-secondary 
+                rounded-full text-xs font-medium 
+                border border-secondary/20
+              "
             >
-              +{department.services.length - 3} more
+              +{services.length - 3} more
             </span>
           )}
         </div>
