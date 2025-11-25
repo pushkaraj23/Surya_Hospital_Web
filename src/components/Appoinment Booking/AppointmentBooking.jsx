@@ -815,7 +815,7 @@ const AppointmentBooking = () => {
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto mt-20 py-20">
+      <div className="max-w-6xl mx-auto mt-20 py-10">
 
         {/* SUCCESS POPUP MODAL */}
         {isSubmitted && (
@@ -832,18 +832,18 @@ const AppointmentBooking = () => {
           </div>
         )}
 
-        {/* PAGE HEADER */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+        {/* Header */}
+        <div className="w-full bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl backdrop-blur-md bg-opacity-80 text-center">
+          <h1 className="text-3xl font-bold mb-2 drop-shadow-sm">
             Book Your Appointment
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Schedule your visit with our expert medical team.
+          <p className="text-lg opacity-90 font-secondary">
+           Schedule your visit with our expert medical team.
           </p>
         </div>
 
         {/* MAIN CARD */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-2xl mt-8 overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-3">
 
             {/* LEFT SIDEBAR */}

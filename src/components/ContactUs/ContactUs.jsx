@@ -120,7 +120,7 @@ const ContactUs = () => {
     }
 
     return (
-        <div className="font-primary min-h-screen text-gray-800 relative overflow-hidden animate-fadeIn mt-20">
+        <div className="font-primary min-h-screen text-gray-800 relative overflow-hidden animate-fadeIn mt-20 py-10">
             <div className="relative z-10 space-y-8 max-w-7xl mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="w-full bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl backdrop-blur-md bg-opacity-80 text-center">

@@ -422,7 +422,7 @@ const FeedbackForm = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto pt-36 mb-12">
+    <div className="w-full max-w-6xl mx-auto pt-40 mb-12">
 
       {/* ✅ SUCCESS POPUP (TOP RIGHT) */}
       {isSubmitted && (
@@ -453,16 +453,17 @@ const FeedbackForm = () => {
 
       {/* HEADER */}
       <div className="bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl text-center mb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">
+        <h1 className="text-3xl font-bold mb-2 drop-shadow-sm">
           Share Your Feedback
         </h1>
-        <p className="text-blue-100">
+        <p className="text-lg opacity-90 font-secondary">
           Help us improve by sharing your experience
         </p>
       </div>
 
+
       {/* FORM CARD */}
-      <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-200">
+      < div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-200" >
         <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
           <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -471,7 +472,7 @@ const FeedbackForm = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          
+
           {/* ⭐ Rating Section */}
           <div className="text-center">
             <label className="block text-sm font-semibold text-gray-700 mb-4">
@@ -489,11 +490,10 @@ const FeedbackForm = () => {
                   className="transform hover:scale-110 transition-transform duration-200"
                 >
                   <svg
-                    className={`w-8 h-8 ${
-                      star <= (hoverRating || formData.rating)
-                        ? "text-yellow-400 fill-current"
-                        : "text-gray-300"
-                    }`}
+                    className={`w-8 h-8 ${star <= (hoverRating || formData.rating)
+                      ? "text-yellow-400 fill-current"
+                      : "text-gray-300"
+                      }`}
                     viewBox="0 0 24 24"
                     fill="currentColor"
                   >
@@ -504,15 +504,14 @@ const FeedbackForm = () => {
             </div>
 
             <div
-              className={`text-lg font-semibold ${
-                formData.rating >= 4
-                  ? "text-green-600"
-                  : formData.rating >= 3
+              className={`text-lg font-semibold ${formData.rating >= 4
+                ? "text-green-600"
+                : formData.rating >= 3
                   ? "text-yellow-600"
                   : formData.rating > 0
-                  ? "text-red-600"
-                  : "text-gray-500"
-              }`}
+                    ? "text-red-600"
+                    : "text-gray-500"
+                }`}
             >
               {formData.rating > 0
                 ? getRatingText(formData.rating)
@@ -539,9 +538,8 @@ const FeedbackForm = () => {
                 name="fullname"
                 value={formData.fullname}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg ${
-                  errors.fullname ? "border-red-400" : "border-gray-300"
-                } focus:ring-2 focus:ring-accent focus:border-transparent`}
+                className={`w-full px-3 py-2 border rounded-lg ${errors.fullname ? "border-red-400" : "border-gray-300"
+                  } focus:ring-2 focus:ring-accent focus:border-transparent`}
                 placeholder="Enter your full name"
               />
               {errors.fullname && (
@@ -561,9 +559,8 @@ const FeedbackForm = () => {
                 name="mobilenumber"
                 value={formData.mobilenumber}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg ${
-                  errors.mobilenumber ? "border-red-400" : "border-gray-300"
-                } focus:ring-2 focus:ring-accent focus:border-transparent`}
+                className={`w-full px-3 py-2 border rounded-lg ${errors.mobilenumber ? "border-red-400" : "border-gray-300"
+                  } focus:ring-2 focus:ring-accent focus:border-transparent`}
                 placeholder="10-digit mobile number"
               />
               {errors.mobilenumber && (
@@ -585,9 +582,8 @@ const FeedbackForm = () => {
               value={formData.feedback}
               onChange={handleInputChange}
               rows={4}
-              className={`w-full px-3 py-2 border rounded-lg resize-none ${
-                errors.feedback ? "border-red-400" : "border-gray-300"
-              } focus:ring-2 focus:ring-accent focus:border-transparent`}
+              className={`w-full px-3 py-2 border rounded-lg resize-none ${errors.feedback ? "border-red-400" : "border-gray-300"
+                } focus:ring-2 focus:ring-accent focus:border-transparent`}
               placeholder="Share your experience, suggestions, or any concerns..."
             />
             {errors.feedback && (
@@ -626,8 +622,8 @@ const FeedbackForm = () => {
             Your feedback will be reviewed before being published. We value your privacy.
           </p>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 
