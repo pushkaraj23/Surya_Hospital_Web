@@ -6,7 +6,7 @@ export const fetchDepartments = async () => {
     const res = await axiosInstance.get("/departments");
     console.log("✅ API response:", res.data);
 
-    // Handle different response structures
+    // Handle different response structuresg
     if (res.data && Array.isArray(res.data)) {
       return res.data;
     } else if (res.data && Array.isArray(res.data.data)) {

@@ -88,7 +88,7 @@
 //       if (response.ok) {
 //         console.log("Feedback submitted successfully:", formData);
 //         setIsSubmitted(true);
-        
+
 //         // Reset form after success
 //         setTimeout(() => {
 //           setFormData({
@@ -158,15 +158,15 @@
 //           </svg>
 //           Tell Us About Your Experience
 //         </h2>
-        
+
 //         <form onSubmit={handleSubmit} className="space-y-6">
-          
+
 //           {/* Rating Section */}
 //           <div className="text-center">
 //             <label className="block text-sm font-semibold text-gray-700 mb-4">
 //               How would you rate your experience? *
 //             </label>
-            
+
 //             {/* Star Rating */}
 //             <div className="flex justify-center space-x-1 mb-3">
 //               {[1, 2, 3, 4, 5].map((star) => (
@@ -190,7 +190,7 @@
 //                 </button>
 //               ))}
 //             </div>
-            
+
 //             {/* Rating Text */}
 //             <div className={`text-lg font-semibold ${
 //               formData.rating >= 4 ? 'text-green-600' :
@@ -199,7 +199,7 @@
 //             }`}>
 //               {formData.rating > 0 ? getRatingText(formData.rating) : "Select your rating"}
 //             </div>
-            
+
 //             {errors.rating && (
 //               <p className="text-red-500 text-sm mt-2">{errors.rating}</p>
 //             )}
@@ -207,7 +207,7 @@
 
 //           {/* Personal Information */}
 //           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
+
 //             {/* Full Name */}
 //             <div className="space-y-2">
 //               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
@@ -316,9 +316,8 @@
 // };
 
 // export default FeedbackForm;
-
 import React, { useState } from "react";
-import { submitFeedback } from "../../api/userApi"; 
+import { submitFeedback } from "../../api/userApi";
 
 const FeedbackForm = () => {
   const [formData, setFormData] = useState({
@@ -334,23 +333,23 @@ const FeedbackForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ""
+        [name]: "",
       }));
     }
   };
 
   const handleRatingClick = (rating) => {
-    setFormData(prev => ({ ...prev, rating }));
+    setFormData((prev) => ({ ...prev, rating }));
     if (errors.rating) {
-      setErrors(prev => ({ ...prev, rating: "" }));
+      setErrors((prev) => ({ ...prev, rating: "" }));
     }
   };
 
@@ -363,7 +362,7 @@ const FeedbackForm = () => {
 
     if (!formData.mobilenumber.trim()) {
       newErrors.mobilenumber = "Mobile number is required";
-    } else if (!/^\d{10}$/.test(formData.mobilenumber.replace(/\D/g, ''))) {
+    } else if (!/^\d{10}$/.test(formData.mobilenumber.replace(/\D/g, ""))) {
       newErrors.mobilenumber = "Please enter a valid 10-digit mobile number";
     }
 
@@ -404,7 +403,6 @@ const FeedbackForm = () => {
         });
         setIsSubmitted(false);
       }, 3000);
-
     } catch (error) {
       setErrors({ submit: "Failed to submit feedback. Please try again." });
     } finally {
@@ -418,33 +416,42 @@ const FeedbackForm = () => {
       2: "Fair",
       3: "Good",
       4: "Very Good",
-      5: "Excellent"
+      5: "Excellent",
     };
     return ratings[rating] || "Select Rating";
   };
 
-  if (isSubmitted) {
-    return (
-      <div className="w-full max-w-2xl mx-auto min-h-64 bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl shadow-xl p-8 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">
-            Thank You for Your Feedback!
-          </h3>
-          <p className="text-gray-600">
-            Your feedback has been submitted successfully.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full max-w-2xl mx-auto pt-36 mb-12">
+
+      {/* ✅ SUCCESS POPUP (TOP RIGHT) */}
+      {isSubmitted && (
+        <div className="fixed top-10 right-10 bg-white border border-green-300 shadow-xl rounded-xl px-5 py-4 z-50 animate-slideIn">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              <svg
+                className="w-6 h-6 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Thank You!
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Your feedback has been submitted.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* HEADER */}
       <div className="bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl text-center mb-6">
         <h1 className="text-2xl font-bold text-white mb-2">
           Share Your Feedback
@@ -454,6 +461,7 @@ const FeedbackForm = () => {
         </p>
       </div>
 
+      {/* FORM CARD */}
       <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-200">
         <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
           <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -463,7 +471,7 @@ const FeedbackForm = () => {
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-
+          
           {/* ⭐ Rating Section */}
           <div className="text-center">
             <label className="block text-sm font-semibold text-gray-700 mb-4">
@@ -495,16 +503,20 @@ const FeedbackForm = () => {
               ))}
             </div>
 
-            <div className={`text-lg font-semibold ${
-              formData.rating >= 4
-                ? "text-green-600"
-                : formData.rating >= 3
-                ? "text-yellow-600"
-                : formData.rating > 0
-                ? "text-red-600"
-                : "text-gray-500"
-            }`}>
-              {formData.rating > 0 ? getRatingText(formData.rating) : "Select your rating"}
+            <div
+              className={`text-lg font-semibold ${
+                formData.rating >= 4
+                  ? "text-green-600"
+                  : formData.rating >= 3
+                  ? "text-yellow-600"
+                  : formData.rating > 0
+                  ? "text-red-600"
+                  : "text-gray-500"
+              }`}
+            >
+              {formData.rating > 0
+                ? getRatingText(formData.rating)
+                : "Select your rating"}
             </div>
 
             {errors.rating && (
@@ -514,7 +526,7 @@ const FeedbackForm = () => {
 
           {/* Name + Mobile */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
+
             <div className="space-y-2">
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -560,7 +572,7 @@ const FeedbackForm = () => {
             </div>
           </div>
 
-          {/* Feedback Field */}
+          {/* Feedback */}
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -583,7 +595,7 @@ const FeedbackForm = () => {
             )}
           </div>
 
-          {/* Submit Button */}
+          {/* SUBMIT */}
           <div className="pt-2">
             <button
               type="submit"
