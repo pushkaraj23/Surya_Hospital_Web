@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "title": "Modern Operation Theater",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1516549655669-dfbf4e8e11c1?auto=format&fit=crop&w=1170&q=80",
+    "category": "facilities",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 2,
+    "title": "Medical Team Conference",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=1170&q=80",
+    "category": "doctors",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 3,
+    "title": "Health Camp 2024",
+    "type": "video",
+    "filepath": "https://www.youtube.com/embed/6ACl8s_tB9E",
+    "category": "events",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 4,
+    "title": "Emergency Department",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=1170&q=80",
+    "category": "facilities",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 5,
+    "title": "Pediatric Ward",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=1170&q=80",
+    "category": "facilities",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 6,
+    "title": "Surgery Procedure",
+    "type": "video",
+    "filepath": "https://www.youtube.com/embed/7Ukp2g3fOtY",
+    "category": "procedures",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 7,
+    "title": "Doctor Consultation",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=1170&q=80",
+    "category": "doctors",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 8,
+    "title": "MRI Center",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1579154204601-015d927e3fd2?auto=format&fit=crop&w=1170&q=80",
+    "category": "facilities",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 9,
+    "title": "Annual Health Checkup",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1180&q=80",
+    "category": "events",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 10,
+    "title": "Cardiac Surgery",
+    "type": "video",
+    "filepath": "https://www.youtube.com/embed/5FdLgJNnMsQ",
+    "category": "procedures",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 11,
+    "title": "Neonatal ICU",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1584302179602-e4819bb92daa?auto=format&fit=crop&w=1170&q=80",
+    "category": "facilities",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 12,
+    "title": "Medical Research",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=1170&q=80",
+    "category": "research",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 13,
+    "title": "Physiotherapy Session",
+    "type": "video",
+    "filepath": "https://www.youtube.com/embed/4B5aPSPzG8w",
+    "category": "procedures",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 14,
+    "title": "Hospital Reception",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1153&q=80",
+    "category": "facilities",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  },
+  {
+    "id": 15,
+    "title": "Medical Equipment",
+    "type": "photo",
+    "filepath": "https://images.unsplash.com/photo-1585435557343-3b092031d5ad?auto=format&fit=crop&w=1170&q=80",
+    "category": "facilities",
+    "isactive": true,
+    "createdat": "2025-11-11T18:30:00.000Z"
+  }
+]
