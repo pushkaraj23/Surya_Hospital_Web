@@ -13,7 +13,7 @@ export default function MediaCard({ item, onOpen }) {
       <div className="relative w-full h-60 max-sm:h-32">
         {item.type === "photo" ? (
           <img
-            src={item.filepath}
+            src={"http://localhost:8654/" + item.filepath}
             alt={item.title}
             className="
               w-full h-full object-cover

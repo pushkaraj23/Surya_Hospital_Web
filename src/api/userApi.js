@@ -78,13 +78,25 @@ export const getGallery = async () => {
     const response = await axiosInstance.get("/gallery");
     console.log("✅ getGallery response:", response.data);
 
-    // Handle different response structures
-    if (Array.isArray(response.data)) return response.data;
-    if (Array.isArray(response.data?.data)) return response.data.data;
-    if (Array.isArray(response.data?.gallery)) return response.data.gallery;
+    let items = [];
 
-    console.warn("Unexpected response structure:", response.data);
-    return [];
+    // Normalize different possible response structures
+    if (Array.isArray(response.data)) {
+      items = response.data;
+    } else if (Array.isArray(response.data?.data)) {
+      items = response.data.data;
+    } else if (Array.isArray(response.data?.gallery)) {
+      items = response.data.gallery;
+    } else {
+      console.warn("Unexpected response structure:", response.data);
+      return [];
+    }
+
+    const filteredItems = items.filter(
+      (item) => item.filepath && item.filepath.trim() !== ""
+    );
+
+    return filteredItems;
   } catch (error) {
     console.error(
       "❌ Error fetching gallery:",

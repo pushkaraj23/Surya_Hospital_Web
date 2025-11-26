@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import MediaCard from "../components/GalleryPage/MediaCard";
 import Lightbox from "../components/GalleryPage/Lightbox";
 import CategoryFilters from "../components/GalleryPage/CategoryFilters";
+import { getGallery } from "../api/userApi";
 
 export default function GalleryPage() {
   const [media, setMedia] = useState([]);
@@ -13,18 +14,38 @@ export default function GalleryPage() {
   const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Load Media
+  // =====================================================
+  // 🔥 FETCH GALLERY MEDIA FROM API
+  // =====================================================
   useEffect(() => {
-    import("../components/GalleryPage/sampleMedia.json").then((res) => {
-      setTimeout(() => {
-        setMedia(res.default);
-        setFilteredMedia(res.default);
+    async function loadMedia() {
+      try {
+        setLoading(true);
+
+        const res = await getGallery(); // API CALL
+        setMedia(res);
+        setFilteredMedia(res);
+      } catch (err) {
+        console.error("Failed to load gallery:", err);
+      } finally {
         setLoading(false);
-      }, 1000);
-    });
+      }
+    }
+
+    loadMedia();
   }, []);
 
-  // Filter Media
+  // =====================================================
+  // 🔥 AUTO-GENERATE UNIQUE CATEGORIES
+  // =====================================================
+  const categories = [
+    "all",
+    ...Array.from(new Set(media.map((item) => item.category))).filter(Boolean),
+  ];
+
+  // =====================================================
+  // 🔥 FILTER MEDIA ON CATEGORY CHANGE
+  // =====================================================
   useEffect(() => {
     if (selectedCategory === "all") setFilteredMedia(media);
     else setFilteredMedia(media.filter((m) => m.category === selectedCategory));
@@ -32,7 +53,9 @@ export default function GalleryPage() {
     setCurrentPage(1);
   }, [selectedCategory, media]);
 
-  // Pagination Logic
+  // =====================================================
+  // 🔥 PAGINATION LOGIC
+  // =====================================================
   const indexOfLast = currentPage * itemsPerPage;
   const currentItems = filteredMedia.slice(
     indexOfLast - itemsPerPage,
@@ -40,15 +63,9 @@ export default function GalleryPage() {
   );
   const totalPages = Math.ceil(filteredMedia.length / itemsPerPage);
 
-  const categories = [
-    "all",
-    "facilities",
-    "doctors",
-    "events",
-    "procedures",
-    "research",
-  ];
-
+  // =====================================================
+  // 🔥 LOADING UI
+  // =====================================================
   if (loading)
     return (
       <div className="min-h-screen flex flex-col justify-center items-center gap-4 bg-mute">
@@ -57,6 +74,9 @@ export default function GalleryPage() {
       </div>
     );
 
+  // =====================================================
+  // 🔥 MAIN PAGE
+  // =====================================================
   return (
     <div className="pt-36 max-sm:pt-28 pb-16 px-4 max-w-7xl mx-auto">
       {/* PAGE TITLE */}
@@ -82,7 +102,16 @@ export default function GalleryPage() {
       {/* MEDIA GRID */}
       <div className="flex flex-wrap gap-3 justify-center mt-10">
         {currentItems.map((item) => (
-          <MediaCard key={item.id} item={item} onOpen={setSelectedMedia} />
+          <MediaCard
+            key={item.id}
+            item={{
+              ...item,
+              imageUrl: item.filepath
+                ? "http://localhost:8654/" + item.filepath
+                : "", // construct full image URL
+            }}
+            onOpen={setSelectedMedia}
+          />
         ))}
       </div>
 
@@ -93,10 +122,11 @@ export default function GalleryPage() {
             <button
               key={i}
               onClick={() => setCurrentPage(i + 1)}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${currentPage === i + 1
+              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                currentPage === i + 1
                   ? "bg-primary text-white shadow-md"
                   : "bg-white text-primary border border-primary hover:bg-primary/10"
-                }`}
+              }`}
             >
               {i + 1}
             </button>
