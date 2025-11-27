@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import DepartmentCard from "../components/Departements/DepartmentCard";
 import DepartmentDetail from "../components/Departements/DepartmentDetail";
 import DoctorProfile from "../components/Departements/DoctorProfile";
@@ -13,31 +14,24 @@ export default function DepartmentsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // -------------------------
-  // Fetch Departments (API)
-  // -------------------------
+  // Load Departments
   useEffect(() => {
     async function loadDepartments() {
       try {
         setLoading(true);
         setError(null);
-
-        const response = await fetchDepartments(); // <- API call
+        const response = await fetchDepartments();
         setDepartments(response || []);
       } catch (err) {
-        console.error("Failed to fetch departments:", err);
         setError("Failed to load departments. Please try again later.");
       } finally {
         setLoading(false);
       }
     }
-
     loadDepartments();
   }, []);
 
-  // -------------------------
   // Filter Logic
-  // -------------------------
   const filteredDepartments = departments.filter((dept) => {
     const name = dept.name?.toLowerCase() || "";
     const desc = dept.description?.toLowerCase() || "";
@@ -52,74 +46,80 @@ export default function DepartmentsPage() {
     return matchesSearch && matchesFilter;
   });
 
-  // -------------------------
-  // Loading State
-  // -------------------------
-  if (loading) {
+  // Loading UI
+  if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-mute text-primary font-semibold tracking-wide">
+      <div className="min-h-screen flex items-center justify-center bg-mute text-primary font-semibold">
         Loading Departments...
       </div>
     );
-  }
 
-  // -------------------------
-  // Error State
-  // -------------------------
-  if (error) {
+  // Error UI
+  if (error)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-mute text-red-600 font-semibold tracking-wide">
+      <div className="min-h-screen flex items-center justify-center bg-mute text-red-600 font-semibold">
         {error}
       </div>
     );
-  }
 
-  // -------------------------
-  // Doctor Profile View
-  // -------------------------
-  if (selectedDoctor) {
+  // Doctor Profile Screen
+  if (selectedDoctor)
     return (
-      <DoctorProfile
-        doctor={selectedDoctor}
-        onBack={() => setSelectedDoctor(null)}
-      />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <DoctorProfile
+          doctor={selectedDoctor}
+          onBack={() => setSelectedDoctor(null)}
+        />
+      </motion.div>
     );
-  }
 
-  // -------------------------
-  // Department Detail View
-  // -------------------------
-  if (selectedDepartment) {
+  // Department Detail Screen
+  if (selectedDepartment)
     return (
-      <DepartmentDetail
-        department={selectedDepartment}
-        onBack={() => setSelectedDepartment(null)}
-        onDoctorSelect={setSelectedDoctor}
-      />
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+        <DepartmentDetail
+          department={selectedDepartment}
+          onBack={() => setSelectedDepartment(null)}
+          onDoctorSelect={setSelectedDoctor}
+        />
+      </motion.div>
     );
-  }
 
-  // -------------------------
-  // Main Department List
-  // -------------------------
+  // Department List Page
   return (
-    <div className="min-h-screen bg-mute pt-36 max-sm:pt-24">
-      {/* Page Header */}
-      <div className="text-center mb-10">
-        <h1 className="text-4xl max-sm:text-3xl font-extrabold text-primary mb-2">
+    <motion.div
+      className="min-h-screen bg-mute pt-36 max-sm:pt-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* Header */}
+      <motion.div
+        className="text-center mb-10 mt-2"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+      >
+        <h1 className="text-5xl font-quicksand max-sm:text-4xl font-extrabold text-primary mb-2">
           Medical Departments
         </h1>
         <div className="w-24 h-1 bg-secondary rounded-full mx-auto"></div>
-        <p className="text-gray-600 mt-4 mx-auto">
-          Explore our advanced medical facilities, team moments, and events from
-          our hospital.
+        <p className="text-gray-600 mt-4">
+          Explore our advanced medical facilities, team moments, and events.
         </p>
-      </div>
+      </motion.div>
 
       {/* Search + Filter */}
-      <div className="max-w-7xl mx-auto px-4 mb-12">
+      <motion.div
+        className="max-w-7xl mx-auto px-4 mb-12"
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        viewport={{ once: true }}
+      >
         <div className="bg-gradient-to-r from-primary/10 via-mute to-primary/5 rounded-2xl shadow-xl p-8 border border-primary/10 backdrop-blur-sm">
-          {/* Title Row */}
+          {/* Title */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <h2 className="text-2xl font-bold text-primary tracking-wide">
               Find a Department
@@ -131,7 +131,7 @@ export default function DepartmentsPage() {
 
           {/* Search + Filter Row */}
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Search Box */}
+            {/* Search */}
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                 <div className="w-10 h-10 bg-white/70 border border-primary/20 backdrop-blur-md shadow-md rounded-xl flex items-center justify-center">
@@ -142,26 +142,20 @@ export default function DepartmentsPage() {
               <input
                 type="text"
                 placeholder="Search by department, specialty or keyword..."
-                className="w-full pl-16 pr-4 py-4 rounded-xl bg-white shadow-md text-gray-700 border border-gray-200 focus:ring-2 focus:ring-primary focus:border-primary transition-all placeholder-gray-400"
+                className="w-full pl-16 pr-4 py-4 rounded-xl bg-white shadow-md text-gray-700 border border-gray-200 focus:ring-2 focus:ring-primary transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
 
-            {/* Filter Dropdown */}
+            {/* Filter */}
             <div className="relative w-full md:w-64">
               <select
                 value={activeFilter}
                 onChange={(e) => setActiveFilter(e.target.value)}
-                className="
-                  w-full appearance-none bg-white border border-gray-200 rounded-xl
-                  px-4 py-4 text-gray-700 shadow-md cursor-pointer
-                  focus:ring-2 focus:ring-secondary focus:border-secondary transition-all
-                "
+                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-4 text-gray-700 shadow-md cursor-pointer focus:ring-2 focus:ring-secondary transition-all"
               >
                 <option value="all">All Departments</option>
-
-                {/* Auto-generate filter options from API data */}
                 {Array.from(new Set(departments.map((d) => d.name))).map(
                   (name) => (
                     <option key={name} value={name.toLowerCase()}>
@@ -171,8 +165,7 @@ export default function DepartmentsPage() {
                 )}
               </select>
 
-              {/* Dropdown Arrow */}
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-primary pointer-events-none">
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-primary">
                 ▼
               </div>
             </div>
@@ -180,26 +173,49 @@ export default function DepartmentsPage() {
 
           <div className="mt-6 h-[3px] w-24 bg-secondary rounded-full"></div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Department Listing */}
+      {/* Department Cards */}
       <div className="max-w-7xl mx-auto px-4 mb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={{
+            hidden: {},
+            show: {
+              transition: {
+                staggerChildren: 0.12,
+              },
+            },
+          }}
+        >
           {filteredDepartments.map((dept) => (
-            <DepartmentCard
+            <motion.div
               key={dept.id}
-              department={dept}
-            />
+              variants={{
+                hidden: { opacity: 0, y: 25 },
+                show: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.5 }}
+            >
+              <DepartmentCard department={dept} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* If No Matching Results */}
+        {/* No Results */}
         {filteredDepartments.length === 0 && (
-          <div className="text-center mt-10 text-gray-500">
-            No departments found. Try adjusting your search or filters.
-          </div>
+          <motion.div
+            className="text-center mt-10 text-gray-500"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            No departments found. Try adjusting your search.
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

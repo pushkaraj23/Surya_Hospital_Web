@@ -78,10 +78,10 @@ export default function GalleryPage() {
   // 🔥 MAIN PAGE
   // =====================================================
   return (
-    <div className="pt-36 max-sm:pt-28 pb-16 px-4 max-w-7xl mx-auto">
+    <div className="pt-40 max-sm:pt-28 pb-16 px-4 max-w-7xl mx-auto">
       {/* PAGE TITLE */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-extrabold text-primary mb-2">
+        <h1 className="text-5xl max-sm:text-4xl font-quicksand font-extrabold text-primary mb-2">
           Hospital Gallery
         </h1>
         <div className="w-24 h-1 bg-secondary rounded-full mx-auto"></div>
