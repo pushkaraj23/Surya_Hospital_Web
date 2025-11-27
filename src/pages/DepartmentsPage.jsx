@@ -106,7 +106,7 @@ export default function DepartmentsPage() {
     <div className="min-h-screen bg-mute pt-36 max-sm:pt-24">
       {/* Page Header */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-extrabold text-primary mb-2">
+        <h1 className="text-4xl max-sm:text-3xl font-extrabold text-primary mb-2">
           Medical Departments
         </h1>
         <div className="w-24 h-1 bg-secondary rounded-full mx-auto"></div>

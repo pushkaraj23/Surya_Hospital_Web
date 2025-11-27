@@ -1,99 +1,69 @@
-// import React from "react";
+import { useState, useEffect } from "react";
+import { getGallery } from "../../api/userApi";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-// const images = [
-//   "https://images.unsplash.com/photo-1579154204601-01588f351e67?w=800&auto=format&fit=crop&q=60",
-//   "https://plus.unsplash.com/premium_photo-1681842906523-f27efd0d1718?w=600&auto=format&fit=crop&q=60",
-//   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=60",
-//   "https://plus.unsplash.com/premium_photo-1681842906523-f27efd0d1718?w=600&auto=format&fit=crop&q=60",
-//   "https://plus.unsplash.com/premium_photo-1661773163380-22e1c6fba588?w=800&auto=format&fit=crop&q=60",
-//   "https://images.unsplash.com/photo-1620210903582-6e3c64be0d76?w=800&auto=format&fit=crop&q=60",
-// ];
-
-// const ImageCard = ({ src, alt }) => (
-//   <div className="rounded-3xl overflow-hidden shadow-lg group relative">
-//     <img
-//       src={src}
-//       alt={alt}
-//       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-//     />
-
-//     {/* Optional Soft Overlay for Elegance */}
-//     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-//   </div>
-// );
-
-// const ImageGallery = () => {
-//   return (
-//     <section className="bg-[#f9fafb] py-16 px-5">
-//       {/* Header */}
-//       <div className="mb-10 text-start">
-//         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 font-quicksand">
-//           Gallery
-//         </h2>
-//         <p className="text-gray-500 mt-1 text-base">
-//           A glimpse of our facilities, team, and patient-first environment.
-//         </p>
-//       </div>
-
-//       {/* Grid Layout */}
-//       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-//         {/* Left Large Image */}
-//         <ImageCard src={images[0]} alt="Large Doctors Group" />
-
-//         {/* Middle Column (Two Images Stacked) */}
-//         <div className="flex flex-col gap-5">
-//           <ImageCard src={images[1]} alt="Doctors Close-up" />
-//           <ImageCard src={images[2]} alt="Modern Interior Room" />
-//         </div>
-
-//         {/* Right Large Image */}
-//         <ImageCard src={images[3]} alt="Hospital Exterior" />
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default ImageGallery;
-
-
-import React, { useState, useEffect } from "react";
-import { getGallery } from "../../api/userApi"; 
-
-const ImageCard = ({ src, alt }) => (
-  <div className="rounded-3xl overflow-hidden shadow-lg group relative">
+/* ---------------- Image Card ---------------- */
+const ImageCard = ({ src, alt, index }) => (
+  <motion.div
+    custom={index}
+    variants={cardVariants}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true, amount: 0.3 }}
+    className="rounded-3xl overflow-hidden shadow-lg group relative cursor-pointer"
+  >
     <img
       src={src}
       alt={alt}
       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
     />
 
-    {/* Optional Soft Overlay for Elegance */}
     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-  </div>
+  </motion.div>
 );
 
+/* ---------------- Animation Variants ---------------- */
+const fadeUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      delay: i * 0.15,
+      duration: 0.7,
+      ease: "easeOut",
+    },
+  }),
+};
+
+/* ---------------- Gallery Section ---------------- */
 const ImageGallery = () => {
-  const [images, setImages] = useState([]);
+  const [galleryImages, setGalleryImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        setLoading(true);
-        const galleryData = await getGallery();
-        
-        // Take first 4 images and construct full image URLs
-        const firstFourImages = galleryData.slice(0, 4).map(item => ({
-          url: item.filepath ? `https://your-domain.com/${item.filepath}` : '', // Adjust domain as needed
-          title: item.title,
-          id: item.id
-        }));
-        
-        setImages(firstFourImages);
+        const data = await getGallery();
+
+        const validImages = data
+          .filter((item) => item.filepath && item.filepath.trim() !== "")
+          .map((item) => ({
+            ...item,
+            fullUrl: `http://localhost:8654/${item.filepath}`,
+          }));
+
+        setGalleryImages(validImages);
       } catch (err) {
-        setError("Failed to load gallery images");
-        console.error("Error fetching gallery:", err);
+        console.error("❌ Error loading gallery:", err);
       } finally {
         setLoading(false);
       }
@@ -102,89 +72,119 @@ const ImageGallery = () => {
     fetchImages();
   }, []);
 
-  // Show loading state
+  /* ---------------- Loading State ---------------- */
   if (loading) {
     return (
-      <section className="bg-[#f9fafb] py-16 px-5">
-        <div className="mb-10 text-start">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 font-quicksand">
-            Gallery
-          </h2>
-          <p className="text-gray-500 mt-1 text-base">
-            A glimpse of our facilities, team, and patient-first environment.
-          </p>
+      <motion.section
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        transition={{ duration: 0.8 }}
+        className="bg-[#f9fafb] py-16 px-5"
+      >
+        <div className="mb-10">
+          <h2 className="text-3xl md:text-4xl font-extrabold">Gallery</h2>
+          <p className="text-gray-500">Loading...</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="rounded-3xl overflow-hidden shadow-lg bg-gray-200 h-64 animate-pulse"></div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 animate-pulse">
+          <div className="h-[300px] bg-gray-300 rounded-3xl"></div>
+
           <div className="flex flex-col gap-5">
-            <div className="rounded-3xl overflow-hidden shadow-lg bg-gray-200 h-32 animate-pulse"></div>
-            <div className="rounded-3xl overflow-hidden shadow-lg bg-gray-200 h-32 animate-pulse"></div>
+            <div className="h-[145px] bg-gray-300 rounded-3xl"></div>
+            <div className="h-[145px] bg-gray-300 rounded-3xl"></div>
           </div>
-          <div className="rounded-3xl overflow-hidden shadow-lg bg-gray-200 h-64 animate-pulse"></div>
+
+          <div className="h-[300px] bg-gray-300 rounded-3xl"></div>
         </div>
-      </section>
+      </motion.section>
     );
   }
 
-  // Show error state
-  if (error) {
-    return (
-      <section className="bg-[#f9fafb] py-16 px-5">
-        <div className="mb-10 text-start">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 font-quicksand">
+  if (galleryImages.length === 0) return null;
+
+  /* ---------------- Select Images (same logic) ---------------- */
+  const categoryMap = {};
+  galleryImages.forEach((img) => {
+    if (!categoryMap[img.category]) categoryMap[img.category] = [];
+    categoryMap[img.category].push(img);
+  });
+
+  const categories = Object.keys(categoryMap);
+
+  let selectedImages = [];
+
+  for (let cat of categories) {
+    if (selectedImages.length >= 4) break;
+    selectedImages.push(categoryMap[cat][0]);
+  }
+
+  if (selectedImages.length < 4) {
+    const filler = 4 - selectedImages.length;
+    selectedImages = [...selectedImages, ...galleryImages.slice(0, filler)];
+  }
+
+  /* ---------------- Final Section with Animation ---------------- */
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      variants={fadeUp}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.8 }}
+      className="bg-[#f9fafb] py-16 px-5"
+    >
+      {/* Header */}
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.8 }}
+        className="mb-10 text-start"
+      >
+        <div className="text-start mb-8">
+          <h2 className="text-4xl font-bold font-quicksand text-gray-800">
             Gallery
           </h2>
-          <p className="text-gray-500 mt-1 text-base">
+          <div className="h-1.5 rounded bg-secondary w-20 mt-1.5 mb-3" />
+          <p className="text-gray-500">
             A glimpse of our facilities, team, and patient-first environment.
           </p>
         </div>
-        <div className="text-center text-red-500 py-8">
-          {error}
-        </div>
-      </section>
-    );
-  }
+      </motion.div>
 
-  // Show actual gallery when data is loaded
-  return (
-    <section className="bg-[#f9fafb] py-16 px-5">
-      {/* Header */}
-      <div className="mb-10 text-start">
-        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 font-quicksand">
-          Gallery
-        </h2>
-        <p className="text-gray-500 mt-1 text-base">
-          A glimpse of our facilities, team, and patient-first environment.
-        </p>
-      </div>
-
-      {/* Grid Layout - Same design as before */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {/* Left Large Image */}
-        <ImageCard 
-          src={images[0]?.url || "/fallback-image.jpg"} 
-          alt={images[0]?.title || "Gallery image 1"} 
+      {/* Grid Layout */}
+      <div
+        onClick={() => navigate("/gallery")}
+        className="grid grid-cols-1 md:grid-cols-3 gap-5 cursor-pointer"
+      >
+        <ImageCard
+          src={selectedImages[0]?.fullUrl}
+          alt={selectedImages[0]?.title}
+          index={0}
         />
 
-        {/* Middle Column (Two Images Stacked) */}
-        <div className="flex flex-col gap-5">
-          <ImageCard 
-            src={images[1]?.url || "/fallback-image.jpg"} 
-            alt={images[1]?.title || "Gallery image 2"} 
+        <div className="grid grid-rows-2 h-[80vh] max-sm:h-fit gap-5">
+          <ImageCard
+            src={selectedImages[1]?.fullUrl}
+            alt={selectedImages[1]?.title}
+            index={1}
           />
-          <ImageCard 
-            src={images[2]?.url || "/fallback-image.jpg"} 
-            alt={images[2]?.title || "Gallery image 3"} 
+          <ImageCard
+            src={selectedImages[2]?.fullUrl}
+            alt={selectedImages[2]?.title}
+            index={2}
           />
         </div>
 
-        {/* Right Large Image */}
-        <ImageCard 
-          src={images[3]?.url || "/fallback-image.jpg"} 
-          alt={images[3]?.title || "Gallery image 4"} 
+        <ImageCard
+          src={selectedImages[3]?.fullUrl}
+          alt={selectedImages[3]?.title}
+          index={3}
         />
       </div>
-    </section>
+    </motion.section>
   );
 };
 

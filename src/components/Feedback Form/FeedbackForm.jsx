@@ -1,323 +1,6 @@
-
-// import React, { useState } from "react";
-// import { Star, User, Phone, MessageSquare, Send } from "lucide-react";
-
-// const FeedbackForm = () => {
-//   const [formData, setFormData] = useState({
-//     fullname: "",
-//     mobilenumber: "",
-//     rating: 0,
-//     feedback: "",
-//   });
-//   const [hoverRating, setHoverRating] = useState(0);
-//   const [errors, setErrors] = useState({});
-//   const [isSubmitting, setIsSubmitting] = useState(false);
-//   const [isSubmitted, setIsSubmitted] = useState(false);
-
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData(prev => ({
-//       ...prev,
-//       [name]: value
-//     }));
-
-//     // Clear error when user starts typing
-//     if (errors[name]) {
-//       setErrors(prev => ({
-//         ...prev,
-//         [name]: ""
-//       }));
-//     }
-//   };
-
-//   const handleRatingClick = (rating) => {
-//     setFormData(prev => ({ ...prev, rating }));
-//     if (errors.rating) {
-//       setErrors(prev => ({ ...prev, rating: "" }));
-//     }
-//   };
-
-//   const validateForm = () => {
-//     const newErrors = {};
-
-//     if (!formData.fullname.trim()) {
-//       newErrors.fullname = "Full name is required";
-//     }
-
-//     if (!formData.mobilenumber.trim()) {
-//       newErrors.mobilenumber = "Mobile number is required";
-//     } else if (!/^\d{10}$/.test(formData.mobilenumber.replace(/\D/g, ''))) {
-//       newErrors.mobilenumber = "Please enter a valid 10-digit mobile number";
-//     }
-
-//     if (formData.rating === 0) {
-//       newErrors.rating = "Please select a rating";
-//     }
-
-//     if (!formData.feedback.trim()) {
-//       newErrors.feedback = "Feedback message is required";
-//     }
-
-//     setErrors(newErrors);
-//     return Object.keys(newErrors).length === 0;
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     if (!validateForm()) return;
-
-//     setIsSubmitting(true);
-
-//     try {
-//       // Simulate API call - Replace with your actual API call
-//       const response = await fetch('/api/feedback', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//           fullname: formData.fullname,
-//           mobilenumber: formData.mobilenumber,
-//           rating: formData.rating,
-//           feedback: formData.feedback,
-//           isapproved: false, // Default to false for admin approval
-//         }),
-//       });
-
-//       if (response.ok) {
-//         console.log("Feedback submitted successfully:", formData);
-//         setIsSubmitted(true);
-
-//         // Reset form after success
-//         setTimeout(() => {
-//           setFormData({
-//             fullname: "",
-//             mobilenumber: "",
-//             rating: 0,
-//             feedback: "",
-//           });
-//           setIsSubmitted(false);
-//         }, 3000);
-//       } else {
-//         throw new Error('Failed to submit feedback');
-//       }
-//     } catch (error) {
-//       console.error("Error submitting feedback:", error);
-//       setErrors({ submit: "Failed to submit feedback. Please try again." });
-//     } finally {
-//       setIsSubmitting(false);
-//     }
-//   };
-
-//   const getRatingText = (rating) => {
-//     const ratings = {
-//       1: "Poor",
-//       2: "Fair", 
-//       3: "Good",
-//       4: "Very Good",
-//       5: "Excellent"
-//     };
-//     return ratings[rating] || "Select Rating";
-//   };
-
-//   if (isSubmitted) {
-//     return (
-//       <div className="min-h-96 mt-20 bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl shadow-xl p-8 flex items-center justify-center">
-//         <div className="text-center">
-//           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-//             <Send className="text-green-600" size={24} />
-//           </div>
-//           <h3 className="text-2xl font-bold text-gray-800 mb-2">
-//             Thank You for Your Feedback!
-//           </h3>
-//           <p className="text-gray-600">
-//             Your feedback has been submitted successfully. We appreciate your input!
-//           </p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="font-primary mt-20 text-gray-800 relative overflow-hidden">
-//       {/* Header Banner */}
-//       <div className="bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl backdrop-blur-md bg-opacity-80 text-center mb-8">
-//         <h1 className="text-3xl font-bold mb-2 drop-shadow-sm">
-//           Share Your Feedback
-//         </h1>
-//         <p className="text-lg opacity-90 font-secondary">
-//           Help us improve by sharing your experience with Surya Hospital
-//         </p>
-//       </div>
-
-//       <div className="bg-white/20 backdrop-blur-lg p-6 rounded-xl shadow-lg border border-gray-300">
-//         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-//           <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-//           </svg>
-//           Tell Us About Your Experience
-//         </h2>
-
-//         <form onSubmit={handleSubmit} className="space-y-6">
-
-//           {/* Rating Section */}
-//           <div className="text-center">
-//             <label className="block text-sm font-semibold text-gray-700 mb-4">
-//               How would you rate your experience? *
-//             </label>
-
-//             {/* Star Rating */}
-//             <div className="flex justify-center space-x-1 mb-3">
-//               {[1, 2, 3, 4, 5].map((star) => (
-//                 <button
-//                   key={star}
-//                   type="button"
-//                   onClick={() => handleRatingClick(star)}
-//                   onMouseEnter={() => setHoverRating(star)}
-//                   onMouseLeave={() => setHoverRating(0)}
-//                   className="transform hover:scale-110 transition-transform duration-200"
-//                 >
-//                   <Star
-//                     size={32}
-//                     className={`
-//                       ${star <= (hoverRating || formData.rating)
-//                         ? 'text-yellow-400 fill-current'
-//                         : 'text-gray-300'
-//                       }
-//                     `}
-//                   />
-//                 </button>
-//               ))}
-//             </div>
-
-//             {/* Rating Text */}
-//             <div className={`text-lg font-semibold ${
-//               formData.rating >= 4 ? 'text-green-600' :
-//               formData.rating >= 3 ? 'text-yellow-600' : 
-//               formData.rating > 0 ? 'text-red-600' : 'text-gray-500'
-//             }`}>
-//               {formData.rating > 0 ? getRatingText(formData.rating) : "Select your rating"}
-//             </div>
-
-//             {errors.rating && (
-//               <p className="text-red-500 text-sm mt-2">{errors.rating}</p>
-//             )}
-//           </div>
-
-//           {/* Personal Information */}
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-//             {/* Full Name */}
-//             <div className="space-y-2">
-//               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-//                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-//                 </svg>
-//                 Full Name *
-//               </label>
-//               <input
-//                 type="text"
-//                 name="fullname"
-//                 value={formData.fullname}
-//                 onChange={handleInputChange}
-//                 className={`w-full px-4 py-3 rounded-lg bg-white/10 border backdrop-blur-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
-//                   errors.fullname ? 'border-red-400' : 'border-gray-400'
-//                 }`}
-//                 placeholder="Enter your full name"
-//               />
-//               {errors.fullname && (
-//                 <p className="text-red-500 text-sm">{errors.fullname}</p>
-//               )}
-//             </div>
-
-//             {/* Mobile Number */}
-//             <div className="space-y-2">
-//               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-//                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-//                 </svg>
-//                 Mobile Number *
-//               </label>
-//               <input
-//                 type="tel"
-//                 name="mobilenumber"
-//                 value={formData.mobilenumber}
-//                 onChange={handleInputChange}
-//                 className={`w-full px-4 py-3 rounded-lg bg-white/10 border backdrop-blur-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent ${
-//                   errors.mobilenumber ? 'border-red-400' : 'border-gray-400'
-//                 }`}
-//                 placeholder="10-digit mobile number"
-//               />
-//               {errors.mobilenumber && (
-//                 <p className="text-red-500 text-sm">{errors.mobilenumber}</p>
-//               )}
-//             </div>
-//           </div>
-
-//           {/* Feedback Message */}
-//           <div className="space-y-2">
-//             <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-//               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-//               </svg>
-//               Your Feedback *
-//             </label>
-//             <textarea
-//               name="feedback"
-//               value={formData.feedback}
-//               onChange={handleInputChange}
-//               rows={4}
-//               className={`w-full px-4 py-3 rounded-lg bg-white/10 border backdrop-blur-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent resize-none ${
-//                 errors.feedback ? 'border-red-400' : 'border-gray-400'
-//               }`}
-//               placeholder="Share your experience, suggestions, or any concerns..."
-//             />
-//             {errors.feedback && (
-//               <p className="text-red-500 text-sm">{errors.feedback}</p>
-//             )}
-//           </div>
-
-//           {/* Submit Button */}
-//           <div className="pt-4">
-//             <button
-//               type="submit"
-//               disabled={isSubmitting}
-//               className="w-full bg-gradient-to-r from-primary to-secondary text-black py-4 px-6 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 backdrop-blur-md border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
-//             >
-//               {isSubmitting ? (
-//                 <>
-//                   <div className="h-5 w-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-//                   Submitting...
-//                 </>
-//               ) : (
-//                 <>
-//                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-//                   </svg>
-//                   Submit Feedback
-//                 </>
-//               )}
-//             </button>
-//           </div>
-
-//           {errors.submit && (
-//             <p className="text-red-500 text-center text-sm">{errors.submit}</p>
-//           )}
-
-//           {/* Privacy Note */}
-//           <p className="text-center text-gray-500 text-sm">
-//             Your feedback will be reviewed before being published. We value your privacy.
-//           </p>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default FeedbackForm;
-import React, { useState } from "react";
+import { useState } from "react";
 import { submitFeedback } from "../../api/userApi";
+import { motion } from "framer-motion";
 
 const FeedbackForm = () => {
   const [formData, setFormData] = useState({
@@ -326,69 +9,59 @@ const FeedbackForm = () => {
     rating: 0,
     feedback: "",
   });
+
   const [hoverRating, setHoverRating] = useState(0);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  /* ---------------------------- HANDLERS ---------------------------- */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const handleRatingClick = (rating) => {
     setFormData((prev) => ({ ...prev, rating }));
-    if (errors.rating) {
-      setErrors((prev) => ({ ...prev, rating: "" }));
-    }
+    if (errors.rating) setErrors((prev) => ({ ...prev, rating: "" }));
   };
 
+  /* ---------------------------- VALIDATION ---------------------------- */
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.fullname.trim()) {
-      newErrors.fullname = "Full name is required";
-    }
+    if (!formData.fullname.trim()) newErrors.fullname = "Full name is required";
 
     if (!formData.mobilenumber.trim()) {
       newErrors.mobilenumber = "Mobile number is required";
-    } else if (!/^\d{10}$/.test(formData.mobilenumber.replace(/\D/g, ""))) {
-      newErrors.mobilenumber = "Please enter a valid 10-digit mobile number";
+    } else if (!/^\d{10}$/.test(formData.mobilenumber)) {
+      newErrors.mobilenumber = "Enter a valid 10-digit mobile number";
     }
 
     if (formData.rating === 0) newErrors.rating = "Please select a rating";
 
-    if (!formData.feedback.trim()) {
+    if (!formData.feedback.trim())
       newErrors.feedback = "Feedback message is required";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  /* ---------------------------- SUBMIT ---------------------------- */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
       await submitFeedback({
-        fullname: formData.fullname,
-        mobilenumber: formData.mobilenumber,
-        rating: formData.rating,
-        feedback: formData.feedback,
+        ...formData,
         isapproved: false,
       });
 
@@ -402,8 +75,8 @@ const FeedbackForm = () => {
           feedback: "",
         });
         setIsSubmitted(false);
-      }, 3000);
-    } catch (error) {
+      }, 2500);
+    } catch {
       setErrors({ submit: "Failed to submit feedback. Please try again." });
     } finally {
       setIsSubmitting(false);
@@ -411,170 +84,228 @@ const FeedbackForm = () => {
   };
 
   const getRatingText = (rating) => {
-    const ratings = {
+    return {
       1: "Poor",
       2: "Fair",
       3: "Good",
       4: "Very Good",
       5: "Excellent",
-    };
-    return ratings[rating] || "Select Rating";
+    }[rating];
   };
 
-  return (
-    <div className="w-full max-w-6xl mx-auto pt-40 mb-12">
+  /* ---------------- Animation Variants ---------------- */
+  const fadeUp = {
+    hidden: { opacity: 0, y: 60 },
+    visible: { opacity: 1, y: 0 },
+  };
 
-      {/* ✅ SUCCESS POPUP (TOP RIGHT) */}
+  const ratingStagger = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: (i) => ({
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delay: 0.4 + i * 0.1,
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    }),
+  };
+
+  /* ========================== UI START ============================== */
+
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={fadeUp}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="w-full max-w-5xl mx-auto pt-32 pb-20 px-5"
+    >
+      {/* SUCCESS TOAST */}
       {isSubmitted && (
-        <div className="fixed top-10 right-10 bg-white border border-green-300 shadow-xl rounded-xl px-5 py-4 z-50 animate-slideIn">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, x: 80 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+          className="fixed top-6 right-6 z-50 bg-white rounded-xl border border-green-300 shadow-lg px-5 py-4"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
               <svg
                 className="w-6 h-6 text-green-600"
                 fill="none"
+                strokeWidth="2"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                Thank You!
-              </h3>
-              <p className="text-gray-600 text-sm">
-                Your feedback has been submitted.
+              <p className="font-semibold text-gray-800 text-lg">
+                Feedback Submitted
+              </p>
+              <p className="text-sm text-gray-500">
+                Thank you for your response.
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* HEADER */}
-      <div className="bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl text-center mb-6">
-        <h1 className="text-3xl font-bold mb-2 drop-shadow-sm">
-          Share Your Feedback
-        </h1>
-        <p className="text-lg opacity-90 font-secondary">
-          Help us improve by sharing your experience
-        </p>
-      </div>
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.1, duration: 0.8 }}
+        className="text-center mb-10"
+      >
+          <h2 className="text-4xl font-bold font-quicksand text-gray-800">
+            Feedback
+          </h2>
+          <div className="h-1.5 rounded bg-secondary w-20 mt-1.5 mb-3 mx-auto" />
+          <p className="text-gray-500">
+            Tell us about the experience you had with us.
+          </p>
+      </motion.div>
 
-
-      {/* FORM CARD */}
-      < div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-gray-200" >
-        <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-800">
-          <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
-          Tell Us About Your Experience
-        </h2>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-
-          {/* ⭐ Rating Section */}
+      {/* CARD */}
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.8 }}
+        className="bg-gradient-to-br from-mute to-accent/50 shadow-2xl rounded-2xl p-8 backdrop-blur-sm border border-gray-100"
+      >
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* RATING */}
           <div className="text-center">
-            <label className="block text-sm font-semibold text-gray-700 mb-4">
-              How would you rate your experience? *
-            </label>
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+              How was your experience with us?
+            </h3>
 
-            <div className="flex justify-center space-x-1 mb-3">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => handleRatingClick(star)}
-                  onMouseEnter={() => setHoverRating(star)}
-                  onMouseLeave={() => setHoverRating(0)}
-                  className="transform hover:scale-110 transition-transform duration-200"
-                >
-                  <svg
-                    className={`w-8 h-8 ${star <= (hoverRating || formData.rating)
-                      ? "text-yellow-400 fill-current"
-                      : "text-gray-300"
-                      }`}
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
+            <div className="flex justify-center gap-2 mb-3">
+              {[1, 2, 3, 4, 5].map((star, index) => {
+                const active = star <= (hoverRating || formData.rating);
+
+                return (
+                  <motion.button
+                    custom={index}
+                    variants={ratingStagger}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    key={star}
+                    type="button"
+                    onClick={() => handleRatingClick(star)}
+                    onMouseEnter={() => setHoverRating(star)}
+                    onMouseLeave={() => setHoverRating(0)}
                   >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                </button>
-              ))}
+                    <svg
+                      className={`w-10 h-10 transition-all ${
+                        active
+                          ? "text-yellow-400 scale-110"
+                          : "text-white hover:scale-105"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                  </motion.button>
+                );
+              })}
             </div>
 
-            <div
-              className={`text-lg font-semibold ${formData.rating >= 4
-                ? "text-green-600"
-                : formData.rating >= 3
+            <p
+              className={`font-semibold ${
+                formData.rating >= 4
+                  ? "text-green-600"
+                  : formData.rating === 3
                   ? "text-yellow-600"
                   : formData.rating > 0
-                    ? "text-red-600"
-                    : "text-gray-500"
-                }`}
+                  ? "text-red-500"
+                  : "text-gray-500"
+              }`}
             >
-              {formData.rating > 0
+              {formData.rating
                 ? getRatingText(formData.rating)
-                : "Select your rating"}
-            </div>
+                : "Select Rating"}
+            </p>
 
             {errors.rating && (
               <p className="text-red-500 text-sm mt-2">{errors.rating}</p>
             )}
           </div>
 
-          {/* Name + Mobile */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+          {/* NAME & MOBILE */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
+            {/* Fullname */}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
                 Full Name *
               </label>
               <input
-                type="text"
                 name="fullname"
                 value={formData.fullname}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg ${errors.fullname ? "border-red-400" : "border-gray-300"
-                  } focus:ring-2 focus:ring-accent focus:border-transparent`}
-                placeholder="Enter your full name"
+                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary ${
+                  errors.fullname ? "border-red-400" : "border-gray-300"
+                }`}
+                placeholder="Enter your name"
               />
               {errors.fullname && (
-                <p className="text-red-500 text-sm">{errors.fullname}</p>
+                <p className="text-red-500 text-sm mt-1">{errors.fullname}</p>
               )}
             </div>
 
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
+            {/* Mobile */}
+            <div>
+              <label className="text-sm font-medium text-gray-700">
                 Mobile Number *
               </label>
               <input
-                type="tel"
                 name="mobilenumber"
                 value={formData.mobilenumber}
                 onChange={handleInputChange}
-                className={`w-full px-3 py-2 border rounded-lg ${errors.mobilenumber ? "border-red-400" : "border-gray-300"
-                  } focus:ring-2 focus:ring-accent focus:border-transparent`}
+                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary ${
+                  errors.mobilenumber ? "border-red-400" : "border-gray-300"
+                }`}
                 placeholder="10-digit mobile number"
               />
               {errors.mobilenumber && (
-                <p className="text-red-500 text-sm">{errors.mobilenumber}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.mobilenumber}
+                </p>
               )}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Feedback */}
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
+          {/* FEEDBACK TEXTAREA */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          >
+            <label className="text-sm font-medium text-gray-700">
               Your Feedback *
             </label>
             <textarea
@@ -582,48 +313,60 @@ const FeedbackForm = () => {
               value={formData.feedback}
               onChange={handleInputChange}
               rows={4}
-              className={`w-full px-3 py-2 border rounded-lg resize-none ${errors.feedback ? "border-red-400" : "border-gray-300"
-                } focus:ring-2 focus:ring-accent focus:border-transparent`}
-              placeholder="Share your experience, suggestions, or any concerns..."
+              className={`w-full mt-1 px-4 py-2 border rounded-lg resize-none focus:ring-2 focus:ring-primary ${
+                errors.feedback ? "border-red-400" : "border-gray-300"
+              }`}
+              placeholder="Tell us about your experience..."
             />
             {errors.feedback && (
-              <p className="text-red-500 text-sm">{errors.feedback}</p>
+              <p className="text-red-500 text-sm mt-1">{errors.feedback}</p>
             )}
-          </div>
+          </motion.div>
 
-          {/* SUBMIT */}
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 px-6 rounded-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Submitting...
-                </>
-              ) : (
-                <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                  </svg>
-                  Submit Feedback
-                </>
-              )}
-            </button>
-          </div>
+          {/* SUBMIT BUTTON */}
+          <motion.button
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            type="submit"
+            disabled={isSubmitting}
+            className="px-5 mx-auto py-4 rounded-2xl font-semibold text-white bg-gradient-to-r from-primary to-secondary shadow-md hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3"
+          >
+            {isSubmitting ? (
+              <>
+                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Submitting...
+              </>
+            ) : (
+              <>
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                  />
+                </svg>
+                Submit Feedback
+              </>
+            )}
+          </motion.button>
 
           {errors.submit && (
-            <p className="text-red-500 text-center text-sm">{errors.submit}</p>
+            <p className="text-red-500 text-center text-sm mt-2">
+              {errors.submit}
+            </p>
           )}
-
-          <p className="text-center text-gray-500 text-xs">
-            Your feedback will be reviewed before being published. We value your privacy.
-          </p>
         </form>
-      </div >
-    </div >
+      </motion.div>
+    </motion.div>
   );
 };
 

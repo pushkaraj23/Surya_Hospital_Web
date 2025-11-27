@@ -12,6 +12,7 @@ import AppointmentBooking from "./components/Appoinment Booking/AppointmentBooki
 import ContactUs from "./components/ContactUs/ContactUs";
 import FeedbackForm from "./components/Feedback Form/FeedbackForm";
 import DepartmentDetailPage from "./pages/DepartmentDetailPage";
+import DetailedBlog from "./components/BlogsPage/DetailedBlog";
 
 function App() {
   return (
@@ -26,11 +27,11 @@ function App() {
         <Route path="/doctors" element={<DoctorsPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/blogs" element={<BlogPage />} />
+        <Route path="/blogs/:id" element={<DetailedBlog />} />
         <Route path="/appoinmentBooking" element={<AppointmentBooking />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/feedback" element={<FeedbackForm />} />
         <Route path="/appBook" element={<AppointmentBooking />} />
-        
       </Routes>
       <Footer />
     </div>

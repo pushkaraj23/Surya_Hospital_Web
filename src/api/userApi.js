@@ -1,6 +1,5 @@
 import axiosInstance from "./axiosInstance";
 
-// ✅ Fetch all departments
 export const fetchDepartments = async () => {
   try {
     const res = await axiosInstance.get("/departments");
@@ -70,6 +69,21 @@ export const getBlogs = async () => {
       error.response?.data || error.message
     );
     throw new Error(error.response?.data?.message || "Failed to fetch blogs");
+  }
+};
+
+export const getBlogById = async (id) => {
+  try {
+    const res = await axiosInstance.get(`/blogs/${id}`);
+    console.log("📄 Single blog:", res.data);
+
+    if (res.data) return res.data;
+    if (res.data?.data) return res.data.data;
+
+    return null;
+  } catch (err) {
+    console.error("❌ Error fetching blog by ID:", err);
+    throw new Error(err.response?.data?.message || "Failed to fetch blog");
   }
 };
 
@@ -209,5 +223,18 @@ export const getDoctorsByDepartment = async (departmentId) => {
       error.response?.data?.message ||
         "Failed to fetch doctors for this department"
     );
+  }
+};
+
+export const getExperts = async () => {
+  try {
+    const res = await axiosInstance.get("/doctors/experts");
+    console.log("✅ getExperts response:", res.data);
+
+    // API always returns a clean array → directly return it
+    return Array.isArray(res.data) ? res.data : [];
+  } catch (error) {
+    console.error("❌ getExperts error:", error);
+    throw new Error("Failed to fetch expert doctors");
   }
 };

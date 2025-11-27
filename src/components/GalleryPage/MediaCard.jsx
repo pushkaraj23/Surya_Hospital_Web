@@ -10,7 +10,7 @@ export default function MediaCard({ item, onOpen }) {
       "
     >
       {/* IMAGE / VIDEO THUMBNAIL */}
-      <div className="relative w-full h-60 max-sm:h-32">
+      <div className="relative w-full h-60 max-sm:h-40">
         {item.type === "photo" ? (
           <img
             src={"http://localhost:8654/" + item.filepath}
@@ -55,22 +55,7 @@ export default function MediaCard({ item, onOpen }) {
 
       {/* CONTENT OVERLAY */}
       <div className="absolute bottom-0 left-0 right-0 p-4 max-sm:p-2 text-white z-20">
-        <h3 className="font-semibold max-sm:text-xs text-sm truncate">
-          {item.title}
-        </h3>
-
         <div className="flex flex-wrap items-center gap-1 mt-1">
-          {/* Category */}
-          <span
-            className="
-              px-2 py-0.5 text-xs rounded-full
-              bg-primary/70 backdrop-blur-sm
-            "
-          >
-            {item.category}
-          </span>
-
-          {/* Type Badge */}
           <span
             className={`
               px-2 py-0.5 text-xs rounded-full
