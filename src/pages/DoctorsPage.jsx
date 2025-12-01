@@ -80,10 +80,9 @@ const DoctorsPage = () => {
             : ["Qualification information not available"],
           experienceDetails: doctor.experience_years
             ? [
-                `${doctor.experience_years} years of experience in ${
-                  doctor.specialization || "medical field"
-                }`,
-              ]
+              `${doctor.experience_years} years of experience in ${doctor.specialization || "medical field"
+              }`,
+            ]
             : ["Experience details not available"],
           availableDays: ["Monday", "Wednesday", "Friday"],
           timings: "9:00 AM - 5:00 PM",
@@ -464,10 +463,7 @@ const DoctorCard = ({ doctor, onViewProfile, index }) => {
             src={safeDoctor.photo || "/default-doctor.png"}
             alt={safeDoctor.name || "Doctor"}
             className="w-20 h-20 rounded-full object-cover border-4 border-primary/10 flex-shrink-0 bg-gray-50"
-            onError={(e) => {
-              e.target.src =
-                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'%3E%3C/path%3E%3C/svg%3E";
-            }}
+
           />
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-gray-900 truncate">
@@ -601,10 +597,7 @@ const DoctorProfile = ({ doctor, onBack }) => {
                   src={safeDoctor.photo || "/default-doctor.png"}
                   alt={safeDoctor.name || "Doctor"}
                   className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto mb-6 object-cover border-4 border-white shadow-xl"
-                  onError={(e) => {
-                    e.target.src =
-                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'%3E%3C/path%3E%3C/svg%3E";
-                  }}
+
                 />
                 <h2 className="text-2xl md:text-3xl font-extrabold mb-1">
                   {safeDoctor.name || "Doctor Name"}
@@ -651,9 +644,10 @@ const DoctorProfile = ({ doctor, onBack }) => {
                   About Dr.{" "}
                   {safeDoctor.name?.split(" ")[1] || safeDoctor.name || ""}
                 </h3>
-                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
-                  {safeDoctor.bio || "Professional bio not available."}
-                </p>
+                <div
+                  className="text-gray-600 leading-relaxed text-sm md:text-base bio-content"
+                  dangerouslySetInnerHTML={{ __html: safeDoctor.bio || "Professional bio not available." }}
+                />
               </div>
 
               <div className="grid md:grid-cols-2 gap-8 mb-8">

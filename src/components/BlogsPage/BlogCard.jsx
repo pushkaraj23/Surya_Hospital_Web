@@ -21,10 +21,7 @@ export default function BlogsCard({ article }) {
           transform group-hover:scale-110 
           transition-all duration-500
         "
-        onError={(e) => {
-          e.target.src =
-            "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?w=1200";
-        }}
+      
       />
 
       {/* Overlay Gradient */}

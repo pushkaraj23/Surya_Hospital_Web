@@ -55,7 +55,7 @@ export default function DepartmentDetail({ department, onDoctorSelect }) {
           <h1 className="text-4xl font-extrabold tracking-wide drop-shadow-lg">
             {department.name}
           </h1>
-          <p className="text-white/90 max-w-2xl">{department.description}</p>
+          <p className="text-white/90 max-w-2xl" dangerouslySetInnerHTML={{ __html: department.description }}></p>
         </motion.div>
       </motion.div>
 
@@ -97,8 +97,8 @@ export default function DepartmentDetail({ department, onDoctorSelect }) {
             >
               <h2 className="text-2xl font-bold text-primary mb-6">Overview</h2>
 
-              <p className="text-gray-700 leading-relaxed mb-8">
-                {department.description}
+              <p className="text-gray-700 leading-relaxed mb-8"
+                dangerouslySetInnerHTML={{ __html: department.description }}>
               </p>
 
               {/* Stats */}

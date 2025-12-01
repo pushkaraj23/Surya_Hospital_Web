@@ -209,9 +209,11 @@ export default function Departments() {
                     <h3 className="font-bold font-quicksand text-gray-800 text-lg">
                       {dept.name}
                     </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      {dept.description}
-                    </p>
+                    <div
+                      className="text-sm text-gray-600 leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: dept.description }}
+                    ></div>
+
                   </div>
                   <button
                     onClick={() => navigate(`/departments/${dept.id}`)}
