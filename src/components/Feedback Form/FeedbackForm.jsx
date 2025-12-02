@@ -186,7 +186,7 @@ const FeedbackForm = () => {
         transition={{ duration: 0.8 }}
         className="bg-gradient-to-br from-mute to-accent/50 shadow-2xl rounded-2xl p-8 backdrop-blur-sm border border-gray-100"
       >
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* RATING */}
           <div className="text-center">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">
@@ -254,7 +254,7 @@ const FeedbackForm = () => {
             whileInView="visible"
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
           >
             {/* Fullname */}
             <div>

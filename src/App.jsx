@@ -13,6 +13,7 @@ import ContactUs from "./components/ContactUs/ContactUs";
 import FeedbackForm from "./components/Feedback Form/FeedbackForm";
 import DepartmentDetailPage from "./pages/DepartmentDetailPage";
 import DetailedBlog from "./components/BlogsPage/DetailedBlog";
+import DoctorDetailsPage from "./components/DoctorsPage/DoctorDetailsPage";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/departments" element={<DepartmentsPage />} />
         <Route path="/departments/:id" element={<DepartmentDetailPage />} />
         <Route path="/doctors" element={<DoctorsPage />} />
+        <Route path="/doctors/:id" element={<DoctorDetailsPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/blogs" element={<BlogPage />} />
         <Route path="/blogs/:id" element={<DetailedBlog />} />

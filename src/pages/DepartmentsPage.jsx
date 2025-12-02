@@ -88,7 +88,7 @@ export default function DepartmentsPage() {
   // Department List Page
   return (
     <motion.div
-      className="min-h-screen bg-mute pt-36 max-sm:pt-24"
+      className="min-h-screen bg-mute pt-36 max-sm:pt-24 px-1"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -178,7 +178,7 @@ export default function DepartmentsPage() {
       {/* Department Cards */}
       <div className="max-w-7xl mx-auto px-4 mb-20">
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}

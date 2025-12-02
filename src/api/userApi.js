@@ -5,17 +5,22 @@ export const fetchDepartments = async () => {
     const res = await axiosInstance.get("/departments");
     console.log("✅ API response:", res.data);
 
-    // Handle different response structuresg
-    if (res.data && Array.isArray(res.data)) {
-      return res.data;
-    } else if (res.data && Array.isArray(res.data.data)) {
-      return res.data.data;
-    } else if (res.data && res.data.data && Array.isArray(res.data.data)) {
-      return res.data.data;
+    let list = [];
+
+    // Handle different response structures
+    if (Array.isArray(res.data)) {
+      list = res.data;
+    } else if (Array.isArray(res.data?.data)) {
+      list = res.data.data;
+    } else {
+      console.warn("⚠️ Unexpected response structure:", res.data);
+      return [];
     }
 
-    console.warn("⚠️ Unexpected response structure:", res.data);
-    return [];
+    // 🔥 Return only active departments
+    const activeDepartments = list.filter((dept) => dept.isactive === true);
+
+    return activeDepartments;
   } catch (error) {
     console.error(
       "❌ fetchDepartments error:",
@@ -50,6 +55,12 @@ export const getDoctors = async () => {
     throw new Error(error.response?.data?.message || "Failed to fetch doctors");
   }
 };
+
+export const getDoctorById = async (id) => {
+  const res = await axiosInstance.get(`/doctors/${id}`);
+  return res.data.data || res.data;
+};
+
 
 export const getBlogs = async () => {
   try {

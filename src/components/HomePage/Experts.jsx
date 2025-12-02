@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getExperts } from "../../api/userApi";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function ExpertsSection() {
   const [experts, setExperts] = useState([]);
@@ -107,12 +108,14 @@ export default function ExpertsSection() {
 
 /* ---------------- Expert Card Component ---------------- */
 const ExpertCard = ({ expert }) => {
+  const navigate = useNavigate();
   return (
     <div
+      onClick={() => navigate(`/doctors/${expert.id}`)}
       className="
       relative rounded-3xl overflow-hidden bg-white/40 backdrop-blur-xl
-      group transition-all duration-500 ease-out flex flex-col items-center 
-      justify-end h-[45vh]"
+      group transition-all duration-500 shadow-md ease-out flex flex-col items-center 
+      justify-end h-[45vh] hover:cursor-pointer hover:shadow-2xl"
     >
       {/* Doctor Image */}
       <img
