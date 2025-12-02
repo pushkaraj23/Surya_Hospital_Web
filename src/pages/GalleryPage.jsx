@@ -106,9 +106,6 @@ export default function GalleryPage() {
             key={item.id}
             item={{
               ...item,
-              imageUrl: item.filepath
-                ? "http://localhost:8654/" + item.filepath
-                : "", // construct full image URL
             }}
             onOpen={setSelectedMedia}
           />

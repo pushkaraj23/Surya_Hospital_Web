@@ -58,7 +58,6 @@ const ImageGallery = () => {
           .filter((item) => item.filepath && item.filepath.trim() !== "")
           .map((item) => ({
             ...item,
-            fullUrl: `http://localhost:8654/${item.filepath}`,
           }));
 
         setGalleryImages(validImages);
@@ -160,26 +159,26 @@ const ImageGallery = () => {
         className="grid grid-cols-1 md:grid-cols-3 gap-5 cursor-pointer"
       >
         <ImageCard
-          src={selectedImages[0]?.fullUrl}
+          src={selectedImages[0]?.filepath}
           alt={selectedImages[0]?.title}
           index={0}
         />
 
         <div className="grid grid-rows-2 h-[80vh] max-sm:h-fit gap-5">
           <ImageCard
-            src={selectedImages[1]?.fullUrl}
+            src={selectedImages[1]?.filepath}
             alt={selectedImages[1]?.title}
             index={1}
           />
           <ImageCard
-            src={selectedImages[2]?.fullUrl}
+            src={selectedImages[2]?.filepath}
             alt={selectedImages[2]?.title}
             index={2}
           />
         </div>
 
         <ImageCard
-          src={selectedImages[3]?.fullUrl}
+          src={selectedImages[3]?.filepath}
           alt={selectedImages[3]?.title}
           index={3}
         />

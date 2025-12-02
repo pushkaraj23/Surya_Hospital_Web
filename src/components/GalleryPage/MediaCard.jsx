@@ -1,6 +1,4 @@
 export default function MediaCard({ item, onOpen }) {
-  const videoId = item.type === "video" ? item.filepath.split("/").pop() : null;
-
   return (
     <div
       onClick={() => onOpen(item)}
@@ -13,7 +11,7 @@ export default function MediaCard({ item, onOpen }) {
       <div className="relative w-full h-60 max-sm:h-40">
         {item.type === "photo" ? (
           <img
-            src={"http://localhost:8654/" + item.filepath}
+            src={item.filepath}
             alt={item.title}
             className="
               w-full h-full object-cover
@@ -22,31 +20,15 @@ export default function MediaCard({ item, onOpen }) {
             "
           />
         ) : (
-          <div className="relative w-full h-full">
-            <img
-              src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
-              alt={item.title}
-              className="
-                w-full h-full object-cover 
-                transition-transform duration-500
-                hover:scale-110
-              "
-            />
-            <div className="absolute inset-0 bg-black/40"></div>
-
-            {/* Play Button */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div
-                className="
-                  w-14 h-14 rounded-full bg-secondary 
-                  flex items-center justify-center text-white
-                  text-2xl shadow-xl transition-transform duration-300
-                "
-              >
-                ▶
-              </div>
-            </div>
-          </div>
+          <video
+            src={item.filepath}
+            className="
+              w-full h-full object-cover
+              transition-transform duration-500
+              hover:scale-105
+            "
+            muted
+          />
         )}
 
         {/* GRADIENT OVERLAY (BOTTOM) */}

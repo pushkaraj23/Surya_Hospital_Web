@@ -35,7 +35,7 @@ export default function Lightbox({ media, onClose, onNavigate }) {
       <div className="max-w-6xl w-full px-4 flex justify-center">
         {media.type === "photo" ? (
           <img
-            src={"http://localhost:8654/" + media.filepath}
+            src={media.filepath}
             alt={media.title}
             className="max-h-[80vh] w-auto object-contain rounded-xl 
             shadow-2xl border border-white/10"
@@ -43,7 +43,7 @@ export default function Lightbox({ media, onClose, onNavigate }) {
         ) : (
           <div className="w-full max-w-4xl">
             <iframe
-              src={"http://localhost:8654/" + media.filepath}
+              src={media.filepath}
               title={media.title}
               className="w-full h-[50vh] md:h-[70vh] rounded-xl shadow-2xl border border-white/10"
               allowFullScreen
