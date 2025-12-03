@@ -146,8 +146,8 @@ const ExpertCard = ({ expert }) => {
           Experience: {expert.experience} years
         </p>
 
-        <p className="text-primary/70 font-medium text-center text-xs mt-2 line-clamp-3">
-          {expert.bio}
+        <p className="text-primary/70 font-medium text-center text-xs mt-2 line-clamp-3" dangerouslySetInnerHTML={{ __html: expert.bio }}>
+          {/* {expert.bio} */}
         </p>
       </div>
     </div>

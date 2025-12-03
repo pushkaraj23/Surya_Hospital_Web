@@ -20,6 +20,7 @@ function App() {
     <div className="bg-mute">
       <Header />
       <ScrollToTop />
+      
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />

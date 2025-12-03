@@ -43,8 +43,9 @@ export default function BlogsCard({ article }) {
         </h3>
 
         {/* Excerpt */}
-        <p className="text-gray-300 text-sm mt-2 line-clamp-2">
-          {article.excerpt}
+        <p className="text-gray-300 text-sm mt-2 line-clamp-2" dangerouslySetInnerHTML={{ __html: article.excerpt }}>
+          
+          {/* {article.excerpt} */}
         </p>
 
         {/* Footer: Read time + Date */}
