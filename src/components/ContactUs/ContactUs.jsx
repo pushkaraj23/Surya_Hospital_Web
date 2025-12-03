@@ -124,10 +124,10 @@ const ContactUs = () => {
             <div className="relative z-10 space-y-8 max-w-7xl mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="w-full bg-gradient-to-r from-primary via-secondary to-accent px-6 py-4 rounded-xl shadow-xl backdrop-blur-md bg-opacity-80 text-center">
-                    <h1 className="text-3xl font-bold mb-2 drop-shadow-sm">
+                    <h1 className="text-3xl font-bold mb-2 text-white drop-shadow-sm">
                         Contact Us
                     </h1>
-                    <p className="text-lg opacity-90 font-secondary">
+                    <p className="text-lg opacity-90  text-white font-secondary">
                         Get in touch with Surya Hospital - We're here to help
                     </p>
                 </div>
@@ -376,7 +376,7 @@ const ContactUs = () => {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full bg-gradient-to-r from-primary to-secondary text-black py-4 px-6 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 backdrop-blur-md border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+                                        className="w-full bg-gradient-to-r from-primary to-secondary  text-white  py-4 px-6 rounded-lg font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-300 backdrop-blur-md border border-gray-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
                                     >
                                         {isSubmitting ? (
                                             <>
