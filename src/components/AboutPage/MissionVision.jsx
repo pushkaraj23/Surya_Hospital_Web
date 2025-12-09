@@ -5,10 +5,17 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
-export default function MissionVision() {
+export default function MissionVision({
+  mission,
+  missiontags,
+  missionimage,
+  vision,
+  visiontags,
+  visionimage,
+}) {
   return (
-    <div className="w-full flex flex-col gap-16 p-6 bg-white lg:p-6">
-      {/* Mission Section */}
+    <div className="w-full flex flex-col gap-16 p-6 lg:p-6">
+      {/* ------------------ MISSION SECTION ------------------ */}
       <motion.div
         variants={fadeUp}
         initial="hidden"
@@ -19,7 +26,7 @@ export default function MissionVision() {
         bg-gradient-to-r from-orange-50 to-amber-50 rounded-3xl p-8 lg:p-12
         shadow-lg hover:shadow-xl transition-shadow duration-300"
       >
-        {/* Content Area */}
+        {/* Mission Content */}
         <motion.div
           variants={fadeUp}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -33,32 +40,23 @@ export default function MissionVision() {
           </div>
 
           <div className="space-y-4">
-            <p className="text-lg text-gray-700 leading-relaxed">
-              We take pride in being more than just a healthcare institution —
-              we are a trusted partner in the journey to{" "}
-              <span className="font-bold text-orange-600">wellness</span>.
-            </p>
-            <p className="text-gray-600 leading-relaxed">
-              From preventive care and diagnostics to advanced surgeries and
-              rehabilitation, our comprehensive services are designed to meet
-              the unique needs of every patient.
-            </p>
+            <p className="text-lg text-gray-700 leading-relaxed">{mission}</p>
           </div>
 
+          {/* Mission Tags */}
           <div className="flex flex-wrap gap-3 pt-4">
-            <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
-              Patient-Centered Care
-            </span>
-            <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
-              Comprehensive Services
-            </span>
-            <span className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
-              Trusted Partnership
-            </span>
+            {missiontags?.map((tag, index) => (
+              <span
+                key={index}
+                className="px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
         </motion.div>
 
-        {/* Image Area */}
+        {/* Mission Image */}
         <motion.div
           variants={fadeUp}
           transition={{ duration: 0.7, delay: 0.15 }}
@@ -67,8 +65,8 @@ export default function MissionVision() {
           <div className="relative">
             <div className="w-64 h-64 rounded-2xl overflow-hidden shadow-2xl border-8 border-white">
               <img
-                src="https://plus.unsplash.com/premium_photo-1664303535827-78a06a7b25a7?w=600&auto=format&fit=crop&q=60"
-                alt="Healthcare mission"
+                src={missionimage}
+                alt="Mission"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -77,7 +75,7 @@ export default function MissionVision() {
         </motion.div>
       </motion.div>
 
-      {/* Vision Section */}
+      {/* ------------------ VISION SECTION ------------------ */}
       <motion.div
         variants={fadeUp}
         initial="hidden"
@@ -88,7 +86,7 @@ export default function MissionVision() {
         bg-gradient-to-r from-blue-50 to-cyan-50 rounded-3xl p-8 lg:p-12
         shadow-lg hover:shadow-xl transition-shadow duration-300"
       >
-        {/* Image Area */}
+        {/* Vision Image */}
         <motion.div
           variants={fadeUp}
           transition={{ duration: 0.7, delay: 0.15 }}
@@ -97,8 +95,8 @@ export default function MissionVision() {
           <div className="relative">
             <div className="w-64 h-64 rounded-2xl overflow-hidden shadow-2xl border-8 border-white">
               <img
-                src="https://images.unsplash.com/photo-1640876777002-badf6aee5bcc?w=600&auto=format&fit=crop&q=60"
-                alt="Healthcare vision"
+                src={visionimage}
+                alt="Vision"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -106,7 +104,7 @@ export default function MissionVision() {
           </div>
         </motion.div>
 
-        {/* Content Area */}
+        {/* Vision Content */}
         <motion.div
           variants={fadeUp}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -120,29 +118,19 @@ export default function MissionVision() {
           </div>
 
           <div className="space-y-4">
-            <p className="text-lg text-gray-700 leading-relaxed">
-              To revolutionize healthcare by creating a future where{" "}
-              <span className="font-bold text-blue-600">every individual</span>
-              has access to compassionate, innovative, and personalized medical
-              care.
-            </p>
-            <p className="text-gray-600 leading-relaxed">
-              We envision a world where technology and human touch converge to
-              deliver exceptional healthcare experiences that transform lives
-              and communities.
-            </p>
+            <p className="text-lg text-gray-700 leading-relaxed">{vision}</p>
           </div>
 
+          {/* Vision Tags */}
           <div className="flex flex-wrap gap-3 pt-4 lg:justify-end">
-            <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-              Innovative Care
-            </span>
-            <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-              Community Impact
-            </span>
-            <span className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-              Future Ready
-            </span>
+            {visiontags?.map((tag, index) => (
+              <span
+                key={index}
+                className="px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
         </motion.div>
       </motion.div>

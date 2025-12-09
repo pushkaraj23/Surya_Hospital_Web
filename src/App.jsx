@@ -14,13 +14,14 @@ import FeedbackForm from "./components/Feedback Form/FeedbackForm";
 import DepartmentDetailPage from "./pages/DepartmentDetailPage";
 import DetailedBlog from "./components/BlogsPage/DetailedBlog";
 import DoctorDetailsPage from "./components/DoctorsPage/DoctorDetailsPage";
+import DetailedPolicyPage from "./components/HomePage/DetailedPolicyPage";
 
 function App() {
   return (
     <div className="bg-mute">
       <Header />
       <ScrollToTop />
-      
+
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -34,6 +35,7 @@ function App() {
         <Route path="/appoinmentBooking" element={<AppointmentBooking />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/feedback" element={<FeedbackForm />} />
+        <Route path="/policy/:id" element={<DetailedPolicyPage />} />
         <Route path="/appBook" element={<AppointmentBooking />} />
       </Routes>
       <Footer />

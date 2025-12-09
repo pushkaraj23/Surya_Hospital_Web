@@ -46,7 +46,7 @@ export default function DetailedBlog() {
     return <div className="p-10 text-center text-red-600">Blog not found</div>;
 
   return (
-    <div className="max-w-4xl mx-auto pt-28 p-4">
+    <div className="max-w-4xl mx-auto pt-36 max-sm:pt-28 p-4">
       {/* Back Button */}
       <button
         onClick={() => navigate("/blogs")}

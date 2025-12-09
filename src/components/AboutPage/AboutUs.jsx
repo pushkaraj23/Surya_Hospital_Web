@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -6,7 +5,7 @@ const fadeUp = {
   visible: { opacity: 1, y: 0 },
 };
 
-const AboutUs = () => {
+const AboutUs = ({ introduction, history, image1, image2 }) => {
   return (
     <motion.div
       initial="hidden"
@@ -51,13 +50,7 @@ const AboutUs = () => {
                 Introduction
               </h2>
               <p className="text-gray-700 leading-relaxed text-base">
-                Welcome to <strong>[Hospital Name]</strong>, where compassionate
-                care meets advanced medical excellence. Our mission is to
-                deliver trusted, high-quality healthcare accessible to everyone.
-                Since our founding in <strong>[Year]</strong>, we have grown
-                into a modern multi-specialty medical center equipped with
-                state-of-the-art technology and expert physicians dedicated to
-                patient well-being.
+                {introduction}
               </p>
             </motion.div>
 
@@ -71,7 +64,7 @@ const AboutUs = () => {
               className="rounded-3xl overflow-hidden shadow-xl min-h-[450px]"
             >
               <img
-                src="https://images.unsplash.com/photo-1542868727-5b8fcd21495e?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src={image1}
                 alt="Hospital Care"
                 className="w-full h-full object-cover"
               />
@@ -90,8 +83,8 @@ const AboutUs = () => {
               className="rounded-3xl overflow-hidden shadow-xl min-h-[450px]"
             >
               <img
-                src="https://images.unsplash.com/photo-1626315869436-d6781ba69d6e?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="Hospital Building"
+                src={image2}
+                alt="Hospitaal Building"
                 className="w-full h-full object-cover"
               />
             </motion.div>
@@ -109,12 +102,7 @@ const AboutUs = () => {
                 Our History
               </h2>
               <p className="text-gray-700 leading-relaxed text-base">
-                From our humble beginnings in <strong>[Year]</strong>,{" "}
-                <strong>[Hospital Name]</strong> has evolved into a trusted
-                healthcare institution known for its quality services,
-                highly-experienced staff, and patient-centered approach. Our
-                commitment to excellence continues to shape our journey as we
-                serve thousands of families with care, expertise, and integrity.
+                {history}
               </p>
             </motion.div>
           </div>

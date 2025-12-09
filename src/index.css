@@ -29,3 +29,23 @@
 .animate-fadeIn {
   animation: fadeIn 0.25s ease-out;
 }
+
+.policy-content h3 {
+  margin-top: 1.5rem;
+  font-size: 1.4rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.policy-content p {
+  margin-bottom: 1rem;
+}
+
+.policy-content ol {
+  margin-left: 1.25rem;
+  list-style: decimal;
+}
+
+.policy-content li {
+  margin-bottom: 0.6rem;
+}

@@ -61,7 +61,6 @@ export const getDoctorById = async (id) => {
   return res.data.data || res.data;
 };
 
-
 export const getBlogs = async () => {
   try {
     const response = await axiosInstance.get("/blogs?isactive=true");
@@ -247,5 +246,183 @@ export const getExperts = async () => {
   } catch (error) {
     console.error("❌ getExperts error:", error);
     throw new Error("Failed to fetch expert doctors");
+  }
+};
+
+export const fetchHeroSection = async () => {
+  try {
+    const res = await axiosInstance.get("/hero_section");
+
+    // API returns an array → return only the first object
+    if (Array.isArray(res.data) && res.data.length > 0) {
+      return res.data[0];
+    }
+
+    return null; // if empty
+  } catch (err) {
+    console.error("Error fetching hero section:", err);
+    throw err;
+  }
+};
+
+export const fetchAboutUs = async () => {
+  try {
+    const res = await axiosInstance.get("/aboutus");
+
+    // API returns an array → return only the first document
+    if (Array.isArray(res.data) && res.data.length > 0) {
+      return res.data[0];
+    }
+
+    return null; // If empty
+  } catch (err) {
+    console.error("Error fetching About Us section:", err);
+    throw err;
+  }
+};
+
+export const fetchCoreValues = async () => {
+  try {
+    const res = await axiosInstance.get("/corevalues");
+
+    // API returns an array of core values
+    if (Array.isArray(res.data)) {
+      return res.data;
+    }
+
+    return [];
+  } catch (err) {
+    console.error("Error fetching core values:", err);
+    throw err;
+  }
+};
+
+export const fetchContactDetails = async () => {
+  try {
+    const res = await axiosInstance.get("/contactdetails");
+
+    // API RETURNS AN ARRAY → return first item
+    if (Array.isArray(res.data) && res.data.length > 0) {
+      return res.data[0];
+    }
+
+    return null;
+  } catch (err) {
+    console.error("Error fetching contact details:", err);
+    throw err;
+  }
+};
+
+export const fetchJourneyTimeline = async () => {
+  try {
+    const res = await axiosInstance.get("/journey");
+
+    // API returns an array of journey items
+    if (Array.isArray(res.data)) {
+      return res.data;
+    }
+
+    return [];
+  } catch (err) {
+    console.error("Error fetching journey timeline:", err);
+    throw err;
+  }
+};
+
+export const fetchInfra = async () => {
+  try {
+    const res = await axiosInstance.get("/infra");
+
+    // If API returns an array → return the array
+    if (Array.isArray(res.data)) {
+      return res.data;
+    }
+
+    // If API returns a single object → return the object
+    if (res.data && typeof res.data === "object") {
+      return res.data;
+    }
+
+    return [];
+  } catch (err) {
+    console.error("Error fetching infrastructure data:", err);
+    throw err;
+  }
+};
+
+export const fetchFacilities = async () => {
+  try {
+    const res = await axiosInstance.get("/facilities");
+
+    // API returns an array of facility objects
+    if (Array.isArray(res.data)) {
+      return res.data;
+    }
+
+    return [];
+  } catch (err) {
+    console.error("Error fetching facilities:", err);
+    throw err;
+  }
+};
+
+export const fetchPolicies = async () => {
+  try {
+    const res = await axiosInstance.get("/policies");
+
+    // API returns an array of policies
+    if (Array.isArray(res.data)) {
+      return res.data;
+    }
+
+    return [];
+  } catch (err) {
+    console.error("Error fetching policies:", err);
+    throw err;
+  }
+};
+
+export const fetchPolicyById = async (id) => {
+  try {
+    const res = await axiosInstance.get(`/policies/${id}`);
+
+    // API returns a single policy object
+    if (res.data) {
+      return res.data;
+    }
+
+    return null;
+  } catch (err) {
+    console.error(`Error fetching policy with ID ${id}:`, err);
+    throw err;
+  }
+};
+
+export const fetchHomeAbout = async () => {
+  try {
+    const res = await axiosInstance.get("/homeabout");
+
+    // API returns an array → return only the first document
+    if (Array.isArray(res.data) && res.data.length > 0) {
+      return res.data[0];
+    }
+
+    return null; // fallback if no data
+  } catch (err) {
+    console.error("Error fetching home about section:", err);
+    throw err;
+  }
+};
+
+export const subscribeNewsletter = async (email) => {
+  try {
+    const payload = { email }; // API expects { email: "" }
+
+    const res = await axiosInstance.post("/newsletter", payload);
+
+    return res.data; // return success message or API response
+  } catch (err) {
+    console.error("Error subscribing to newsletter:", err);
+    throw err;
   }
 };
