@@ -249,7 +249,6 @@ export const getExperts = async () => {
   }
 };
 
-<<<<<<< HEAD
 
 /* =======================
    GET ALL APPROVED FEEDBACKS
@@ -563,4 +562,3 @@ export const subscribeNewsletter = async (email) => {
     throw err;
   }
 };
->>>>>>> af3745e8d2a6d4655bdd1b33c64652742f06c7dd
