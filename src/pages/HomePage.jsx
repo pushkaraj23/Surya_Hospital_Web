@@ -19,7 +19,7 @@ const HomePage = () => {
       <TestimonialSection />
       <BlogHighlights />
       <ImageGallery />
-      <FeedbackForm />
+      {/* <FeedbackForm /> */}
     </div>
   );
 };
