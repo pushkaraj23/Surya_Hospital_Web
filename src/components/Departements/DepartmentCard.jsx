@@ -15,6 +15,12 @@ export default function DepartmentCard({ department }) {
     experience,
   } = department;
 
+  const stripHtml = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.textContent || div.innerText || "";
+  };
+
   return (
     <div
       onClick={() => navigate(`/departments/${id}`)}
@@ -40,9 +46,13 @@ export default function DepartmentCard({ department }) {
         <h3 className="text-2xl font-bold text-primary mb-2">{name}</h3>
 
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-5 leading-relaxed">
+        {/* <p className="text-gray-600 text-sm mb-5 leading-relaxed">
           {description?.slice(0, 120)}...
+        </p> */}
+        <p className="text-gray-600 text-sm mb-5 leading-relaxed">
+          {stripHtml(description)?.slice(0, 120)}...
         </p>
+
 
         {/* Stats Section */}
         <div className="grid grid-cols-3 gap-3 mb-5">

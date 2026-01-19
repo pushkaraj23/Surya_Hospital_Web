@@ -249,3 +249,139 @@ export const getExperts = async () => {
     throw new Error("Failed to fetch expert doctors");
   }
 };
+
+
+/* =======================
+   GET ALL APPROVED FEEDBACKS
+======================= */
+export const getFeedbacks = async () => {
+  try {
+    const response = await axiosInstance.get("/feedback?isapproved=true");
+    console.log("✅ getFeedbacks response:", response.data);
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.error(
+      "❌ Error fetching feedbacks:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch feedbacks"
+    );
+  }
+};
+
+/* =======================
+   GET ALL FEEDBACKS (ADMIN)
+======================= */
+export const getAllFeedbacks = async () => {
+  try {
+    const response = await axiosInstance.get("/feedback");
+    console.log("✅ getAllFeedbacks response:", response.data);
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.error(
+      "❌ Error fetching all feedbacks:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch feedbacks"
+    );
+  }
+};
+
+/* =======================
+   GET FEEDBACK BY ID
+======================= */
+export const getFeedbackById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/feedback/${id}`);
+    console.log("✅ getFeedbackById response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "❌ Error fetching feedback:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch feedback"
+    );
+  }
+};
+
+/* =======================
+   CREATE FEEDBACK
+======================= */
+export const createFeedback = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/feedback", payload);
+    console.log("✅ createFeedback response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "❌ Error creating feedback:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to create feedback"
+    );
+  }
+};
+
+/* =======================
+   UPDATE FEEDBACK
+======================= */
+export const updateFeedback = async (id, payload) => {
+  try {
+    const response = await axiosInstance.put(`/feedback/${id}`, payload);
+    console.log("✅ updateFeedback response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "❌ Error updating feedback:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to update feedback"
+    );
+  }
+};
+
+/* =======================
+   DELETE FEEDBACK
+======================= */
+export const deleteFeedback = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/feedback/${id}`);
+    console.log("✅ deleteFeedback response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "❌ Error deleting feedback:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to delete feedback"
+    );
+  }
+};
+
+/* =======================
+   APPROVE FEEDBACK
+======================= */
+export const approveFeedback = async (id) => {
+  try {
+    const response = await axiosInstance.put(`/feedback/${id}`, {
+      isapproved: true,
+    });
+    console.log("✅ approveFeedback response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "❌ Error approving feedback:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Failed to approve feedback"
+    );
+  }
+};

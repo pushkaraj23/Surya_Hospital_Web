@@ -118,6 +118,7 @@ const Header = () => {
             <NavMotionItem name="Gallery" path="/gallery" />
             <NavMotionItem name="Blogs" path="/blogs" />
             <NavMotionItem name="Appoinment" path="/appBook" />
+            <NavMotionItem name="Feedback" path="/feedback" />
           </motion.ul>
 
           {/* Desktop Contact Button */}
@@ -186,6 +187,12 @@ const Header = () => {
               <NavItem
                 name="Blogs"
                 path="/blogs"
+                mobile
+                onClick={closeMobileMenu}
+              />
+               <NavItem
+                name="Feedback"
+                path="/feedback"
                 mobile
                 onClick={closeMobileMenu}
               />
