@@ -1,19 +1,68 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaFacebookF, FaInstagram, FaEnvelope } from "react-icons/fa";
-import { IoLocationSharp } from "react-icons/io5";
+import {
+  fetchPolicies,
+  fetchContactDetails,
+  subscribeNewsletter,
+} from "../api/userApi";
+import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [policies, setPolicies] = useState([]);
+  const [contact, setContact] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubscribe = () => {
+  /* ---------------- Fetch Policies ---------------- */
+  useEffect(() => {
+    const loadPolicies = async () => {
+      try {
+        const data = await fetchPolicies();
+        setPolicies(data);
+      } catch (err) {
+        console.error("Error fetching policies:", err);
+      }
+    };
+    loadPolicies();
+  }, []);
+
+  /* ---------------- Fetch Contact Details ---------------- */
+  useEffect(() => {
+    const loadContact = async () => {
+      try {
+        const data = await fetchContactDetails();
+        setContact(data); // single object
+      } catch (err) {
+        console.error("Error fetching contact details:", err);
+      }
+    };
+    loadContact();
+  }, []);
+
+  const handleSubscribe = async () => {
     if (!email || !email.includes("@")) {
       alert("Please enter a valid email");
       return;
     }
 
-    alert(`Subscribed with email: ${email}`);
-    setEmail("");
+    try {
+      setSubmitting(true);
+      await subscribeNewsletter(email); // 🔥 Actual POST call
+      alert("Subscribed successfully!");
+      setEmail("");
+    } catch (err) {
+      alert("Subscription failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  // Helpers for social links with graceful fallback
+  const fbLink = contact?.facebook || "https://facebook.com";
+  const igLink = contact?.instagram || "https://instagram.com";
+  const ytLink = contact?.youtube || "https://youtube.com";
+  const emailLink = contact?.email || "info@hospitalnearj.org";
 
   return (
     <footer className="w-full bg-gradient-to-br from-primary to-primary/40 text-white py-14 px-6">
@@ -37,10 +86,16 @@ export default function Footer() {
 
               <button
                 onClick={handleSubscribe}
-                className="bg-primary text-white px-8 py-3 rounded-2xl 
-                  font-semibold hover:bg-blue-800 transition-colors whitespace-nowrap"
+                disabled={submitting}
+                className={`bg-primary text-white px-8 py-3 rounded-2xl 
+                  font-semibold transition-colors whitespace-nowrap
+                  ${
+                    submitting
+                      ? "opacity-70 cursor-not-allowed"
+                      : "hover:bg-blue-800"
+                  }`}
               >
-                Subscribe
+                {submitting ? "Subscribing..." : "Subscribe"}
               </button>
             </div>
           </div>
@@ -52,50 +107,94 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
           {/* ------------ Contact Information ------------ */}
           <div className="space-y-3">
-            <p className="text-sm">
-              <span className="font-semibold">Address:</span> 123 Wellness
-              Avenue, Healthy City, State 12345
-            </p>
-            <p className="text-sm">
-              <span className="font-semibold">Phone:</span> (123) 456-7890
-            </p>
-            <p className="text-sm">
-              <span className="font-semibold">Email:</span>{" "}
-              info@hospitalnearj.org
-            </p>
-            <p className="text-sm">
-              <span className="font-semibold">Fax:</span> (123) 456-7891
-            </p>
+            {contact ? (
+              <>
+                <p className="text-sm">
+                  <span className="font-semibold">Address:</span>{" "}
+                  {contact.address}
+                </p>
+                <p className="text-sm">
+                  <span className="font-semibold">Phone:</span> {contact.phone}
+                </p>
+                <p className="text-sm">
+                  <span className="font-semibold">Emergency:</span>{" "}
+                  {contact.emergencyno}
+                </p>
+                <p className="text-sm">
+                  <span className="font-semibold">Email:</span> {contact.email}
+                </p>
 
-            <div className="pt-4 space-y-2 border-t border-white/20 mt-4">
-              <p className="text-sm font-semibold">
-                Emergency Department: Open 24/7
-              </p>
-              <p className="text-sm">
-                Outpatient Clinics: Mon–Fri, 8 AM – 6 PM
-              </p>
-              <p className="text-sm">
-                Laboratory & Imaging: Mon–Sat, 7 AM – 5 PM
-              </p>
-            </div>
+                <div className="pt-4 space-y-2 border-t border-white/20 mt-4">
+                  <p className="text-sm font-semibold">Working Hours</p>
+                  <p className="text-sm">
+                    {contact.workinghours || "Timings not available"}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-sm opacity-70">Loading contact details...</p>
+              </>
+            )}
           </div>
 
           {/* ------------ Navigation Links ------------ */}
           <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-3">
-              <FooterLink label="Home" />
-              <FooterLink label="About Us" />
-              <FooterLink label="Departments" />
-              <FooterLink label="Doctors" />
-              <FooterLink label="Gallery" />
-              <FooterLink label="Blogs" />
+            {/* Main Site Links */}
+            <div className="space-y-3 text-sm">
+              <p
+                onClick={() => navigate("/")}
+                className="block text-left text-sm hover:text-secondary hover:cursor-pointer transition-colors"
+              >
+                Home
+              </p>
+              <p
+                onClick={() => navigate("/about")}
+                className="block text-left text-sm hover:text-secondary hover:cursor-pointer transition-colors"
+              >
+                About Us
+              </p>
+              <p
+                onClick={() => navigate("/departments")}
+                className="block text-left text-sm hover:text-secondary hover:cursor-pointer transition-colors"
+              >
+                Departments
+              </p>
+              <p
+                onClick={() => navigate("/doctors")}
+                className="block text-left text-sm hover:text-secondary hover:cursor-pointer transition-colors"
+              >
+                Doctors
+              </p>
+              <p
+                onClick={() => navigate("/gallery")}
+                className="block text-left text-sm hover:text-secondary hover:cursor-pointer transition-colors"
+              >
+                Gallery
+              </p>
+              <p
+                onClick={() => navigate("/blogs")}
+                className="block text-left text-sm hover:text-secondary hover:cursor-pointer transition-colors"
+              >
+                Blogs
+              </p>
             </div>
 
+            {/* -------- Dynamic Policies -------- */}
             <div className="space-y-3">
-              <FooterLink label="Terms & Conditions" />
-              <FooterLink label="Privacy Policy" />
-              <FooterLink label="Accessibility" />
-              <FooterLink label="Non-Discrimination Notice" />
+              {policies.length === 0 && (
+                <p className="text-sm opacity-70">Loading policies...</p>
+              )}
+
+              {policies.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => navigate(`/policy/${p.id}`)}
+                  className="block text-left text-sm hover:text-secondary transition-colors"
+                >
+                  {p.title}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -104,36 +203,31 @@ export default function Footer() {
             {/* Social Media Icons */}
             <div className="flex gap-4">
               <SocialIcon
-                href="https://facebook.com"
+                href={fbLink}
                 icon={<FaFacebookF />}
                 hover="hover:text-blue-500"
               />
               <SocialIcon
-                href="https://instagram.com"
+                href={igLink}
                 icon={<FaInstagram />}
                 hover="hover:text-pink-500"
               />
               <SocialIcon
-                href="mailto:info@hospitalnearj.org"
+                href={`mailto:${emailLink}`}
                 icon={<FaEnvelope />}
                 hover="hover:text-red-600"
               />
             </div>
 
-            {/* Map */}
+            {/* Map (still static for now) */}
             <div className="w-56 h-48 bg-mute rounded-2xl overflow-hidden shadow-lg relative border border-gray-300">
-              {/* Google Map Embed */}
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.4439323062736!2d73.9046481!3d18.5557219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c10b7f6b5edb%3A0x9f85b2cd559ee5b4!2sSurya%20Hospital!5e0!3m2!1sen!2sin!4v1708190000000!5m2!1sen!2sin"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
-                allowFullScreen=""
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
               ></iframe>
-
-              {/* Label Overlay */}
               <div className="absolute top-2 left-2 bg-secondary text-white px-3 py-1 rounded-lg text-xs font-bold shadow">
                 SURYA HOSPITAL
               </div>
@@ -153,12 +247,6 @@ export default function Footer() {
 }
 
 /* ---------------- Reusable Components ---------------- */
-
-const FooterLink = ({ label }) => (
-  <a href="#" className="block text-sm hover:text-secondary transition-colors">
-    {label}
-  </a>
-);
 
 const SocialIcon = ({ href, icon, hover }) => (
   <a

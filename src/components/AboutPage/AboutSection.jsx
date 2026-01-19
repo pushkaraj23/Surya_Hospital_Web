@@ -20,22 +20,13 @@ const staggerContainer = {
   },
 };
 
-export default function AboutSections() {
+export default function AboutSections({
+  directorname,
+  directorimage,
+  directormessage,
+}) {
+  // Static CMS sections remain unchanged
   const cmsData = {
-    director: {
-      name: "Dr. Sarah Johnson",
-      title: "Medical Director & Chief of Surgery",
-      image:
-        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&auto=format&fit=crop&q=60",
-      message: `For over 15 years, I've had the privilege of leading our exceptional team at Fibonce Healthcare. Our commitment has always been to provide not just treatment, but comprehensive care that addresses the physical, emotional, and psychological needs of our patients.
-
-What sets us apart is our unwavering dedication to medical excellence combined with genuine compassion. We've built a culture where every team member shares the same vision: to make healthcare accessible, advanced, and human-centered.
-
-I'm proud of the milestones we've achieved together and excited for the innovations we're bringing to our community. Thank you for trusting us with your health.`,
-      signature:
-        "https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?w=200&auto=format&fit=crop&q=60",
-    },
-
     coreValues: [
       {
         icon: "💖",
@@ -66,39 +57,6 @@ I'm proud of the milestones we've achieved together and excited for the innovati
         icon: "🛡️",
         title: "Integrity",
         description: "Maintaining transparency and ethical practices",
-      },
-    ],
-
-    milestones: [
-      {
-        year: "2010",
-        event: "Foundation",
-        description: "Established with 50 beds and 3 departments",
-      },
-      {
-        year: "2013",
-        event: "Cardiac Unit",
-        description: "Launched advanced cardiac care facility",
-      },
-      {
-        year: "2016",
-        event: "JCI Accredited",
-        description: "International quality certification",
-      },
-      {
-        year: "2019",
-        event: "Expansion",
-        description: "200-bed new wing inaugurated",
-      },
-      {
-        year: "2021",
-        event: "Telemedicine",
-        description: "Introduced digital consultations",
-      },
-      {
-        year: "2023",
-        event: "Robotic Surgery",
-        description: "AI-assisted surgical systems launched",
       },
     ],
 
@@ -149,8 +107,8 @@ I'm proud of the milestones we've achieved together and excited for the innovati
           <div className="relative">
             <div className="w-80 h-80 rounded-2xl overflow-hidden shadow-2xl border-8 border-white">
               <img
-                src={cmsData.director.image}
-                alt={cmsData.director.name}
+                src={directorimage}
+                alt={directorname}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -164,40 +122,22 @@ I'm proud of the milestones we've achieved together and excited for the innovati
         <motion.div
           variants={fadeUp}
           transition={{ delay: 0.2 }}
-          className="lg:col-span-8 space-y-6"
+          className="lg:col-span-8 space-y-6 my-auto md:pb-2"
         >
           <div className="space-y-3">
             <div className="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
               Director’s Message
             </div>
 
-            <h2 className="text-4xl font-bold text-gray-800">
-              {cmsData.director.name}
-            </h2>
-
-            <p className="text-lg text-purple-600 font-semibold">
-              {cmsData.director.title}
-            </p>
+            <h2 className="text-4xl font-bold text-gray-800">{directorname}</h2>
           </div>
 
           <div className="space-y-4">
-            {cmsData.director.message.split("\n\n").map((p, i) => (
+            {directormessage?.split("\n\n").map((p, i) => (
               <p key={i} className="text-gray-700 leading-relaxed text-lg">
                 {p}
               </p>
             ))}
-          </div>
-
-          <div className="flex items-center gap-4 pt-6">
-            <div className="w-32 h-0.5 bg-purple-300"></div>
-            <div className="flex items-center gap-3">
-              <img
-                src={cmsData.director.signature}
-                alt="Signature"
-                className="h-12 object-contain"
-              />
-              <span className="text-gray-600 font-semibold">Warmly,</span>
-            </div>
           </div>
         </motion.div>
       </motion.div>
