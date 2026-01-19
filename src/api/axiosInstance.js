@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://147.93.96.98:8654/api/", // Fixed: removed space before http
+  // baseURL: "http://147.93.96.98:8654/api/",
+   baseURL: "https://api.suryahospitalpune.com/api",
   headers: {
     "Content-Type": "application/json",
   },
