@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { fetchInfra, fetchFacilities } from "../../api/userApi";
+import { fetchInfra, fetchFacilities, getFullImageUrl } from "../../api/userApi";
 
 const fadeUp = { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0 } };
 const staggerContainer = {
@@ -19,14 +19,40 @@ export default function Infrastructure() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   /* ------------ Load Infra + Facilities Data ------------ */
+  // useEffect(() => {
+  //   const loadData = async () => {
+  //     try {
+  //       const infraData = await fetchInfra();
+  //       const facilityData = await fetchFacilities();
+
+  //       setStats(infraData);
+  //       setFacilities(facilityData);
+  //     } catch (err) {
+  //       console.error("Error loading infrastructure data:", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   loadData();
+  // }, []);
+
+
   useEffect(() => {
     const loadData = async () => {
       try {
         const infraData = await fetchInfra();
         const facilityData = await fetchFacilities();
 
+        const normalizedFacilities = facilityData.map((facility) => ({
+          ...facility,
+          photos: facility.photos?.map((photo) =>
+            getFullImageUrl(photo)
+          ),
+        }));
+
         setStats(infraData);
-        setFacilities(facilityData);
+        setFacilities(normalizedFacilities);
       } catch (err) {
         console.error("Error loading infrastructure data:", err);
       } finally {
@@ -36,6 +62,7 @@ export default function Infrastructure() {
 
     loadData();
   }, []);
+
 
   /* ------------ Open Popup Handler ------------ */
   const openPopup = (photos, index = 0) => {

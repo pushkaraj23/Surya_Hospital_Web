@@ -1,8 +1,7 @@
 import axios from "axios";
-
+import { BASE_URL } from "./apiConfig";
 const axiosInstance = axios.create({
-  // baseURL: "http://147.93.96.98:8654/api/",
-   baseURL: "https://api.suryahospitalpune.com/api",
+  baseURL: BASE_URL + "/api/",
   headers: {
     "Content-Type": "application/json",
   },

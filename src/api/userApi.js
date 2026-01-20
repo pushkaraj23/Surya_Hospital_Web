@@ -1,4 +1,11 @@
+import { BASE_URL } from "./apiConfig";
 import axiosInstance from "./axiosInstance";
+
+export const getFullImageUrl = (url) => {
+  if (!url) return "";
+  return url.startsWith("http") ? url : `${BASE_URL}${url}`;
+};
+
 
 export const fetchDepartments = async () => {
   try {
@@ -231,7 +238,7 @@ export const getDoctorsByDepartment = async (departmentId) => {
     );
     throw new Error(
       error.response?.data?.message ||
-        "Failed to fetch doctors for this department"
+      "Failed to fetch doctors for this department"
     );
   }
 };
@@ -562,3 +569,4 @@ export const subscribeNewsletter = async (email) => {
     throw err;
   }
 };
+
