@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { createContact } from "../../api/userApi"; // Import your API function
 
 const ContactUs = () => {
+    const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
         name: "",
@@ -12,6 +14,17 @@ const ContactUs = () => {
     });
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        const request = searchParams.get("request");
+        if (request === "brochure") {
+            setFormData(prev => ({
+                ...prev,
+                subject: "Medical Tourism Brochure Request",
+                message: "I would like to receive the Medical Tourism brochure for Surya Hospital. Please send it to my email.",
+            }));
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         // Simulate API loading delay

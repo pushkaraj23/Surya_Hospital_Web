@@ -976,16 +976,14 @@ const MedicalTourismPage = () => {
       {/* ——— BONUS: Brochure & Live Chat ——— */}
       <section className="bg-mute py-10">
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-0 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <motion.a
-            href="#"
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={sectionViewport}
-            className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all"
-          >
-            <FaDownload /> Download Medical Tourism Brochure
-          </motion.a>
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={sectionViewport}>
+            <Link
+              to="/contact?request=brochure"
+              className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary/90 transition-all"
+            >
+              <FaDownload /> Download Medical Tourism Brochure
+            </Link>
+          </motion.div>
           <motion.a
             href="#"
             variants={fadeUp}
