@@ -7,6 +7,7 @@ import DepartmentsPage from "./pages/DepartmentsPage";
 import DoctorsPage from "./pages/DoctorsPage";
 import GalleryPage from "./pages/GalleryPage";
 import BlogPage from "./pages/BlogPage";
+import MedicalTourismPage from "./pages/MedicalTourismPage";
 import ScrollToTop from "./utils/ScrollToTop";
 import AppointmentBooking from "./components/Appoinment Booking/AppointmentBooking";
 import ContactUs from "./components/ContactUs/ContactUs";
@@ -25,6 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/medical-tourism" element={<MedicalTourismPage />} />
         <Route path="/departments" element={<DepartmentsPage />} />
         <Route path="/departments/:id" element={<DepartmentDetailPage />} />
         <Route path="/doctors" element={<DoctorsPage />} />

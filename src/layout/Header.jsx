@@ -101,7 +101,7 @@ const Header = () => {
 
           {/* Desktop Nav Links */}
           <motion.ul
-            className="hidden md:flex gap-10 font-semibold text-gray-700"
+            className="hidden md:flex gap-6 font-semibold text-gray-700 text-sm lg:text-base"
             initial="hidden"
             animate="show"
             variants={{
@@ -111,14 +111,14 @@ const Header = () => {
               },
             }}
           >
-            <NavMotionItem name="Home" path="/" />
-            <NavMotionItem name="About Us" path="/about" />
+            <NavMotionItem name="About" path="/about" />
             <NavMotionItem name="Departments" path="/departments" />
             <NavMotionItem name="Doctors" path="/doctors" />
             <NavMotionItem name="Gallery" path="/gallery" />
             <NavMotionItem name="Blogs" path="/blogs" />
             <NavMotionItem name="Appoinment" path="/appBook" />
             <NavMotionItem name="Feedback" path="/feedback" />
+            <NavMotionItem name="Medical Tourism" path="/medical-tourism" />
           </motion.ul>
 
           {/* Desktop Contact Button */}
@@ -129,7 +129,7 @@ const Header = () => {
           >
             <Link
               to="/contact"
-              className="hidden md:inline-block bg-secondary hover:bg-accent text-white px-6 py-2.5 rounded-full font-semibold shadow-md transition-all duration-300"
+              className="hidden md:inline-block bg-secondary hover:bg-accent text-white px-5 lg:px-6 py-2.5 rounded-full font-semibold shadow-md transition-all duration-300 text-sm lg:text-base"
             >
               Contact Us
             </Link>
@@ -159,9 +159,8 @@ const Header = () => {
             className="md:hidden bg-white/75 backdrop-blur-md shadow-xl rounded-3xl mx-5 mt-2 py-7 px-6"
           >
             <ul className="flex flex-col gap-5 text-gray-700 items-center font-semibold">
-              <NavItem name="Home" path="/" mobile onClick={closeMobileMenu} />
               <NavItem
-                name="About Us"
+                name="About"
                 path="/about"
                 mobile
                 onClick={closeMobileMenu}
@@ -190,9 +189,15 @@ const Header = () => {
                 mobile
                 onClick={closeMobileMenu}
               />
-               <NavItem
+              <NavItem
                 name="Feedback"
                 path="/feedback"
+                mobile
+                onClick={closeMobileMenu}
+              />
+              <NavItem
+                name="Medical Tourism"
+                path="/medical-tourism"
                 mobile
                 onClick={closeMobileMenu}
               />
@@ -222,7 +227,7 @@ const NavMotionItem = ({ name, path }) => (
     }}
     transition={{ duration: 0.4 }}
   >
-    <Link to={path} className="hover:text-primary transition">
+    <Link to={path} className="hover:text-primary text-sm transition">
       {name}
     </Link>
   </motion.li>
