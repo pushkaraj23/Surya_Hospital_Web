@@ -170,6 +170,22 @@ export const createContact = async (contactData) => {
   }
 };
 
+/**
+ * Submit Medical Tourism enquiry.
+ * POST /tourismenquiry
+ * @param {Object} payload - { full_name, email, phone, country, treatment_interest, enquiry_type, message, preferred_contact, expected_travel_date, checked }
+ * @returns {Promise<Object>} API response (created enquiry with id, etc.)
+ */
+export const submitMedicalTourismEnquiry = async (payload) => {
+  try {
+    const response = await axiosInstance.post("/tourismenquiry", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting medical tourism enquiry:", error);
+    throw error.response?.data || error;
+  }
+};
+
 export const createAppointment = async (appointmentData) => {
   try {
     const response = await axiosInstance.post("appointments", appointmentData);

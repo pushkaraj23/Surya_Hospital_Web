@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { submitMedicalTourismEnquiry } from "../api/userApi";
 import {
   FaWhatsapp,
   FaPlaneArrival,
@@ -35,10 +36,128 @@ const staggerContainer = {
 };
 const sectionViewport = { once: true, amount: 0.15 };
 
+const ENQUIRY_TYPES = [
+  { value: "medical_opinion", label: "Get Free Medical Opinion" },
+  { value: "cost_estimate", label: "Request Cost Estimate" },
+  { value: "general", label: "General Enquiry" },
+];
+
+const TREATMENT_OPTIONS = [
+  "Orthopedics (Joint Replacement, Spine)",
+  "Cardiac Surgery",
+  "Neurosurgery",
+  "IVF & Fertility",
+  "Cosmetic & Plastic Surgery",
+  "Oncology",
+  "Gastroenterology",
+  "Urology",
+  "Dental & Maxillofacial",
+  "Other",
+];
+
 const MedicalTourismPage = () => {
   const whatsappNumber = "919876543210";
   const phoneNumber = "+919876543210";
+  const [searchParams, setSearchParams] = useSearchParams();
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
+  const formRef = useRef(null);
+
+  const [enquiryIntent, setEnquiryIntent] = useState("general");
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    country: "",
+    treatmentInterest: "",
+    message: "",
+    preferredContact: "email",
+    expectedTravelDate: "",
+    checked: false,
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // "success" | "error" | null
+
+  const scrollToEnquiryForm = (intent = "general") => {
+    setEnquiryIntent(intent);
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
+
+  useEffect(() => {
+    const scroll = searchParams.get("scroll");
+    const intent = searchParams.get("intent") || "general";
+    if (scroll === "enquiry") {
+      setEnquiryIntent(intent);
+      setTimeout(() => {
+        formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+  }, [searchParams]);
+
+  const handleEnquiryChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const validateEnquiryForm = () => {
+    const newErrors = {};
+    if (!formData.fullName?.trim()) newErrors.fullName = "Name is required";
+    if (!formData.email?.trim()) newErrors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = "Invalid email";
+    if (!formData.phone?.trim()) newErrors.phone = "Phone is required";
+    if (!formData.country?.trim()) newErrors.country = "Country is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleEnquirySubmit = async (e) => {
+    e.preventDefault();
+    setSubmitStatus(null);
+    if (!validateEnquiryForm()) return;
+    if (!formData.checked) {
+      setErrors((prev) => ({ ...prev, checked: "Please accept the terms to continue." }));
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        full_name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        country: formData.country.trim(),
+        treatment_interest: formData.treatmentInterest || "",
+        enquiry_type: enquiryIntent,
+        message: formData.message?.trim() || "",
+        preferred_contact: formData.preferredContact || "email",
+        expected_travel_date: formData.expectedTravelDate?.trim() || "",
+        checked: formData.checked,
+      };
+      await submitMedicalTourismEnquiry(payload);
+      setSubmitStatus("success");
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        country: "",
+        treatmentInterest: "",
+        message: "",
+        preferredContact: "email",
+        expectedTravelDate: "",
+        checked: false,
+      });
+      setEnquiryIntent("general");
+    } catch (err) {
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <main className="pt-28 max-sm:pt-20 pb-24 bg-mute min-h-screen overflow-x-hidden max-sm:px-3">
@@ -85,18 +204,20 @@ const MedicalTourismPage = () => {
             >
               <FaWhatsapp className="text-xl" /> WhatsApp International Desk
             </a>
-            <Link
-              to="/appBook"
+            <button
+              type="button"
+              onClick={() => scrollToEnquiryForm("medical_opinion")}
               className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-5 py-3 rounded-xl shadow-lg hover:bg-mute transition-all hover:scale-105"
             >
               Get Free Medical Opinion
-            </Link>
-            <Link
-              to="/contact"
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollToEnquiryForm("cost_estimate")}
               className="inline-flex items-center gap-2 border-2 border-white text-white font-semibold px-5 py-3 rounded-xl hover:bg-white/10 transition-all"
             >
               Request Cost Estimate
-            </Link>
+            </button>
           </motion.div>
           <motion.div
             initial={{ opacity: 0 }}
@@ -264,6 +385,32 @@ const MedicalTourismPage = () => {
               <p className="text-xs text-white/80">Patient Satisfaction</p>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* CTA strip: Get opinion / Cost estimate */}
+      <section className="bg-primary/5 py-6 border-y border-primary/10">
+        <div className="max-w-6xl mx-auto px-4 flex flex-wrap justify-center gap-4">
+          <button
+            type="button"
+            onClick={() => scrollToEnquiryForm("medical_opinion")}
+            className="inline-flex items-center gap-2 bg-primary text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-primary/90 transition-all text-sm"
+          >
+            Get Free Medical Opinion
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToEnquiryForm("cost_estimate")}
+            className="inline-flex items-center gap-2 bg-secondary text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-secondary/90 transition-all text-sm"
+          >
+            Request Cost Estimate
+          </button>
+          <Link
+            to={`/medical-tourism?scroll=enquiry&intent=general`}
+            className="inline-flex items-center gap-2 border-2 border-primary text-primary font-semibold px-5 py-2.5 rounded-xl hover:bg-primary/10 transition-all text-sm"
+          >
+            Submit Enquiry
+          </Link>
         </div>
       </section>
 
@@ -586,6 +733,15 @@ const MedicalTourismPage = () => {
               </motion.div>
             ))}
           </motion.div>
+          <div className="text-center mt-10">
+            <button
+              type="button"
+              onClick={() => scrollToEnquiryForm("general")}
+              className="inline-flex items-center gap-2 bg-secondary text-white font-semibold px-6 py-3 rounded-xl hover:bg-secondary/90 transition-all"
+            >
+              Start Your Journey — Submit Enquiry
+            </button>
+          </div>
         </div>
       </section>
 
@@ -638,6 +794,15 @@ const MedicalTourismPage = () => {
               </tbody>
             </table>
           </motion.div>
+          <div className="text-center mt-6">
+            <button
+              type="button"
+              onClick={() => scrollToEnquiryForm("cost_estimate")}
+              className="inline-flex items-center gap-2 text-primary font-semibold underline underline-offset-2 hover:no-underline"
+            >
+              Get a detailed cost estimate for your procedure →
+            </button>
+          </div>
         </motion.div>
       </SectionWrapper>
 
@@ -908,6 +1073,197 @@ const MedicalTourismPage = () => {
         </div>
       </section>
 
+      {/* ——— MEDICAL TOURISM ENQUIRY FORM ——— */}
+      <section
+        id="medical-tourism-enquiry"
+        ref={formRef}
+        className="bg-mute py-14 md:py-18 scroll-mt-28"
+      >
+        <div className="max-w-2xl mx-auto px-4 md:px-6 lg:px-0">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={sectionViewport}
+            className="text-center mb-8"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold text-primary mb-2">
+              Medical Tourism Enquiry
+            </h2>
+            <p className="text-gray-600 text-sm">
+              Share your details. Our International Patient Desk will respond within 24 hours.
+            </p>
+          </motion.div>
+
+          <motion.form
+            onSubmit={handleEnquirySubmit}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={sectionViewport}
+            className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 space-y-4"
+          >
+            {submitStatus === "success" && (
+              <div className="rounded-xl bg-green-50 border border-green-200 text-green-800 px-4 py-3 text-sm">
+                Thank you! We have received your enquiry and will contact you within 24 hours.
+              </div>
+            )}
+            {submitStatus === "error" && (
+              <div className="rounded-xl bg-red-50 border border-red-200 text-red-800 px-4 py-3 text-sm">
+                Something went wrong. Please try again or contact us via WhatsApp.
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Enquiry type</label>
+              <select
+                value={enquiryIntent}
+                onChange={(e) => setEnquiryIntent(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              >
+                {ENQUIRY_TYPES.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full name *</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleEnquiryChange}
+                  placeholder="Your name"
+                  className={`w-full px-4 py-2.5 rounded-lg border ${errors.fullName ? "border-red-400" : "border-gray-200"} focus:ring-2 focus:ring-primary/20 focus:border-primary`}
+                />
+                {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleEnquiryChange}
+                  placeholder="your@email.com"
+                  className={`w-full px-4 py-2.5 rounded-lg border ${errors.email ? "border-red-400" : "border-gray-200"} focus:ring-2 focus:ring-primary/20 focus:border-primary`}
+                />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleEnquiryChange}
+                  placeholder="+ country code and number"
+                  className={`w-full px-4 py-2.5 rounded-lg border ${errors.phone ? "border-red-400" : "border-gray-200"} focus:ring-2 focus:ring-primary/20 focus:border-primary`}
+                />
+                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleEnquiryChange}
+                  placeholder="Country of residence"
+                  className={`w-full px-4 py-2.5 rounded-lg border ${errors.country ? "border-red-400" : "border-gray-200"} focus:ring-2 focus:ring-primary/20 focus:border-primary`}
+                />
+                {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country}</p>}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Treatment / procedure of interest</label>
+              <select
+                name="treatmentInterest"
+                value={formData.treatmentInterest}
+                onChange={handleEnquiryChange}
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              >
+                <option value="">Select (optional)</option>
+                {TREATMENT_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Preferred contact</label>
+              <div className="flex flex-wrap gap-4">
+                {["email", "phone", "whatsapp"].map((opt) => (
+                  <label key={opt} className="inline-flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="preferredContact"
+                      value={opt}
+                      checked={formData.preferredContact === opt}
+                      onChange={handleEnquiryChange}
+                      className="text-primary focus:ring-primary"
+                    />
+                    <span className="text-sm capitalize">{opt}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Expected travel date (optional)</label>
+              <input
+                type="text"
+                name="expectedTravelDate"
+                value={formData.expectedTravelDate}
+                onChange={handleEnquiryChange}
+                placeholder="e.g. March 2025"
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Message / medical details (optional)</label>
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleEnquiryChange}
+                rows={4}
+                placeholder="Brief description of your condition or questions..."
+                className="w-full px-4 py-2.5 rounded-lg border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+              />
+            </div>
+
+            <div>
+              <label className="inline-flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="checked"
+                  checked={formData.checked}
+                  onChange={handleEnquiryChange}
+                  className="rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <span className="text-sm text-gray-600">I agree to be contacted regarding my medical tourism enquiry and consent to the use of my details for this purpose.</span>
+              </label>
+              {errors.checked && <p className="text-red-500 text-xs mt-1">{errors.checked}</p>}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-3 rounded-xl bg-primary text-white font-semibold hover:bg-primary/90 disabled:opacity-60 transition-all"
+            >
+              {isSubmitting ? "Submitting…" : "Submit Enquiry"}
+            </button>
+          </motion.form>
+        </div>
+      </section>
+
       {/* ——— 14. STICKY WHATSAPP FLOATING BUTTON ——— */}
       <motion.a
         href={`https://wa.me/${whatsappNumber}`}
@@ -944,20 +1300,22 @@ const MedicalTourismPage = () => {
             className="flex flex-wrap justify-center gap-4"
           >
             <motion.div variants={fadeUp}>
-              <Link
-                to="/appBook"
+              <button
+                type="button"
+                onClick={() => scrollToEnquiryForm("medical_opinion")}
                 className="inline-flex items-center gap-2 bg-secondary text-white font-semibold px-6 py-3 rounded-xl hover:bg-secondary/90 transition-all"
               >
-                Upload Medical Reports
-              </Link>
+                Upload Medical Reports / Get Opinion
+              </button>
             </motion.div>
             <motion.div variants={fadeUp}>
-              <Link
-                to="/contact"
+              <button
+                type="button"
+                onClick={() => scrollToEnquiryForm("cost_estimate")}
                 className="inline-flex items-center gap-2 bg-white text-primary font-semibold px-6 py-3 rounded-xl hover:bg-mute transition-all"
               >
                 Get Free Cost Estimate
-              </Link>
+              </button>
             </motion.div>
             <motion.div variants={fadeUp}>
               <a
